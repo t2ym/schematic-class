@@ -55,6 +55,7 @@ To be converted to CHANGELOG.md in a dedicated project
 ### Changed
 ### Removed
 ### Fixed
+- Iterate over missing properties properly when preservePropertyOrder is true
 
 ## [0.0.1] - 2025-02-14
 ### Added
@@ -258,14 +259,23 @@ const JSONClass = (class JSONClass { // declaration and initialization at once w
     const schema = this.constructor.schema;
     if (initProperties) {
       if (this.constructor.preservePropertyOrder) {
+        const processedKeys = {};
         for (let key of this.constructor.schemaKeys) {
           if (schema[key] === "-") {
+            processedKeys[key] = true;
             yield key; // hidden key
           }
         }
         for (let key in initProperties) {
+          processedKeys[key] = true;
           yield key;
         }  
+        for (let key of this.constructor.schemaKeys) {
+          if (processedKeys[key]) {
+            continue;
+          }
+          yield key;
+        }
       }
       else {
         for (let key of this.constructor.schemaKeys) {
