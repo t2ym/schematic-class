@@ -463,7 +463,7 @@ if (typeof require !== "undefined" && typeof "module" !== "undefined" && require
         //_hidden_string_property: "hidden string property value",
         //_hidden_number_property: -1,
         unknown_property: "unknown property value",
-        boolean_property: true,
+        //boolean_property: true,
         optional_string_property: "optional string property value",
         unknown_string_property: "unknown string property value",
         unknown_array_property: [ 1, 2, 3 ],
@@ -538,6 +538,7 @@ if (typeof require !== "undefined" && typeof "module" !== "undefined" && require
           console.log(`fixed json = ${JSON.stringify(json, null, 2)}`);
           */
           // It is very risky to adjust properties on errors
+          wrapped.boolean_property = true;
           wrapped.integer_property = 5;
           wrapped.array_property[6] = 123;
           wrapped.object_property["2d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"].formatted_string_property
