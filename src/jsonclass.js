@@ -227,6 +227,9 @@ const JSONClass = (class JSONClass { // declaration and initialization at once w
   }
   static onError(errorParameters) {
     const errorParametersClone = JSON.parse(JSON.stringify(errorParameters));
+    if (!Object.hasOwn(errorParametersClone, "value")) {
+      errorParametersClone.value = errorParameters.value; // set value as undefined on a missing property error
+    }
     if (Array.isArray(errorParameters.jsonPath) && Array.isArray(errorParameters.jsonPath.errors)) {
       errorParameters.jsonPath.errors.push(errorParametersClone);
       switch (errorParameters.jsonPath.recoveryMethod) {
