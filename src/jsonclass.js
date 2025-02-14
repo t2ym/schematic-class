@@ -55,7 +55,13 @@ To be converted to CHANGELOG.md in a dedicated project
 ### Changed
 ### Removed
 ### Fixed
+
+## [0.0.2] - 2025-02-15
+### Changed
+- [demo] Add a case for a missing property
+### Fixed
 - Iterate over missing properties properly when preservePropertyOrder is true
+- Set value property of errors as undefined on missing property errors
 
 ## [0.0.1] - 2025-02-14
 ### Added
