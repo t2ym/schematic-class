@@ -321,6 +321,13 @@ const JSONClass = (class JSONClass { // declaration and initialization at once w
           configurable: true,
           enumerable: false, // hidden property
         });
+        if (loading && (property in initProperties) && !(initProperties instanceof this.constructor)) {
+          // hidden properties:
+          //  - discarded as errors on loading from a JSON object regardless of recoveryMethod
+          //  - copied on cloning from an instance of the same class without errors
+          this.constructor.onError({ jsonPath, type: property, value: initProperties[property], message: "hidden property assignment" });
+          continue; // no recovery from errors
+        }
       }
       const types = parsedTypes[currentSchema] ||
         (parsedTypes[currentSchema] =
