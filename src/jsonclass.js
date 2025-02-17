@@ -476,7 +476,7 @@ if (typeof require !== "undefined" && typeof "module" !== "undefined" && require
       ValueObject.register();
   
       const json = {
-        //_hidden_string_property: "hidden string property value",
+        _hidden_string_property: "invalid hidden string property assignment", // assigning hidden properties is invalid
         //_hidden_number_property: -1,
         unknown_property: "unknown property value",
         //boolean_property: true,
@@ -532,6 +532,7 @@ if (typeof require !== "undefined" && typeof "module" !== "undefined" && require
           // wrapped object is broken
           console.error("JSONClass Errors:", jsonPath.errors);
           console.error("Broken Object", wrapped);
+          console.log(`wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
           console.log(`wrapped.validate(jsonPath2)`);
           let jsonPath2 = Object.assign([], { errors: [], recoveryMethod: "value" });
           wrapped.validate(jsonPath2);
@@ -564,8 +565,12 @@ if (typeof require !== "undefined" && typeof "module" !== "undefined" && require
           let jsonPath4 = Object.assign([], { errors: [], recoveryMethod: "value" });
           wrapped.validate(jsonPath4);
           console.log(`jsonPath4.errors = `, jsonPath4.errors);
+          // hidden property does not throw on cloning an instance of the same class
+          wrapped._hidden_string_property = "hidden string property value";
+          console.log(`fixed wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
           wrapped = new WrappedJSONClass(wrapped);
         }
+        console.log(`cloned wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
         Object.assign(wrapped, {
           _hidden_string_property: "hidden string property value",
           _hidden_number_property: -1,
