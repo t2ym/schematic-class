@@ -503,7 +503,7 @@ if (typeof require !== "undefined" && typeof "module" !== "undefined" && require
       };
   
       try {
-        let jsonPath = Object.assign([], { errors: [], recoveryMethod: "value" });
+        let jsonPath = Object.assign([], { errors: [], recoveryMethod: "value", allowHiddenPropertyAssignment: false });
         console.log(`json = ${JSON.stringify(json, null, 2)}`);
         let wrapped =
           new WrappedJSONClass(json, jsonPath); // accumulate multiple errors; messy and slow on many errors
