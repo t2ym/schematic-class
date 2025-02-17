@@ -1,0 +1,25 @@
+{
+  "name": "jsonclass",
+  "version": "0.0.3",
+  "description": "JSON schema for JavaScript classes",
+  "main": "jsonclass.js",
+  "module": "esm/jsonclass.js",
+  "scripts": {
+    "build": "node src/jsonclass.js ESM >esm/jsonclass.js && node src/jsonclass.js CJS >jsonclass.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/t2ym/jsonclass.git"
+  },
+  "author": "Tetsuya Mori <t2y3141592@gmail.com>",
+  "keywords": [
+    "JSON",
+    "schema",
+    "class"
+  ],
+  "license": "BSD-2-Clause",
+  "devDependencies": {
+    "preprocess": "^3.2.0"
+  }
+}
