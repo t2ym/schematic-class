@@ -25,7 +25,7 @@
  */
 /*
 
-  jsonclass.js: JSON schema for JavaScript classes
+  Integrated JSON schema for JavaScript classes
 
 # Dependencies
 - ES2018 and later
@@ -55,6 +55,10 @@ To be converted to CHANGELOG.md in a dedicated project
 ### Changed
 ### Removed
 ### Fixed
+
+## [0.0.4] - 2025-02-17
+### Changed
+- [npm] Register the package as "schematic-class"
 
 ## [0.0.3] - 2025-02-17
 ### Added

@@ -1,8 +1,8 @@
-[![npm version](https://badge.fury.io/js/jsonclass.svg)](https://badge.fury.io/js/jsonclass)
+[![npm version](https://badge.fury.io/js/schematic-class.svg)](https://badge.fury.io/js/schematic-class)
 
-# jsonclass
+# schematic-class
 
-JSON schema for JavaScript classes
+Integrated JSON schema for JavaScript classes
 
 # Features
 
@@ -17,16 +17,16 @@ JSON schema for JavaScript classes
 
 # Install
 ```sh
-npm i jsonclass
+npm i schematic-class
 ```
 
 # Import
 
 ```js
-import { JSONClass, JSONClassError } from "jsonclass";
+import { JSONClass, JSONClassError } from 'schematic-class';
 ```
 ```js
-const { JSONClass, JSONClassError } = require("jsonclass");
+const { JSONClass, JSONClassError } = require('schematic-class');
 ```
 
 # Usage

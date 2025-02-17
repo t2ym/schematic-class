@@ -1,7 +1,7 @@
 {
-  "name": "jsonclass",
-  "version": "0.0.3",
-  "description": "JSON schema for JavaScript classes",
+  "name": "schematic-class",
+  "version": "0.0.4",
+  "description": "Integrated JSON schema for JavaScript classes",
   "main": "jsonclass.js",
   "module": "esm/jsonclass.js",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/t2ym/jsonclass.git"
+    "url": "git+https://github.com/t2ym/schematic-class.git"
   },
   "author": "Tetsuya Mori <t2y3141592@gmail.com>",
   "keywords": [
