@@ -6,6 +6,12 @@
 ### Removed
 ### Fixed
 
+## [0.0.6] - 2025-02-18
+### Added
+- [demo] Issue #4: Add a case for allowHiddenPropertyAssignment in instantiation from the same class instance
+### Changed
+- [design change] Issue #4: Hidden properties from the same class instance should be assigned only if allowHiddenPropertyAssignment is true
+
 ## [0.0.5] - 2025-02-18
 ### Added
 - [doc] CHANGELOG.md
