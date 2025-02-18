@@ -528,7 +528,10 @@ if (typeof require !== "undefined" && typeof "module" !== "undefined" && require
           // hidden property does not throw on cloning an instance of the same class
           wrapped._hidden_string_property = "hidden string property value";
           console.log(`fixed wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
-          wrapped = new WrappedJSONClass(wrapped);
+          let jsonPath5 = Object.assign([], { allowHiddenPropertyAssignment: true });
+          wrapped = new WrappedJSONClass(wrapped, jsonPath5); // not throw; allow assignment of hidden properties
+          console.log(`cloned w/ allowHiddenPropertyAssignment wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
+          wrapped = new WrappedJSONClass(wrapped); // not throw; skip assignment of hidden properties and initialize as undefined
         }
         console.log(`cloned wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
         Object.assign(wrapped, {
