@@ -6,6 +6,15 @@
 ### Removed
 ### Fixed
 
+## [0.0.5] - 2025-02-18
+### Added
+- [doc] CHANGELOG.md
+- [doc] LICENSE.md
+### Changed
+- Replace the license with the link to LICENSE.md
+### Removed
+- Change Log in the source code
+
 ## [0.0.4] - 2025-02-17
 ### Changed
 - [npm] Register the package as "schematic-class"
