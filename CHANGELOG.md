@@ -1,0 +1,30 @@
+# Change Log
+
+## [Unreleased]
+### Added
+### Changed
+### Removed
+### Fixed
+
+## [0.0.4] - 2025-02-17
+### Changed
+- [npm] Register the package as "schematic-class"
+
+## [0.0.3] - 2025-02-17
+### Added
+- Add jsonPath.allowHiddenPropertyAssignment: true option. Default: false
+- [demo] Add a case for invalid hidden property assignment and copying of hidden properties
+### Fixed
+- [vulnerability] Error without recovery on hidden property assignment from a JSON object which is not a same class instance
+
+## [0.0.2] - 2025-02-15
+### Changed
+- [demo] Add a case for a missing property
+### Fixed
+- Iterate over missing properties properly when preservePropertyOrder is true
+- Set value property of errors as undefined on missing property errors
+
+## [0.0.1] - 2025-02-14
+### Added
+- Initial version
+- Subject to drastic changes
