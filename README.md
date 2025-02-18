@@ -34,4 +34,4 @@ TBD
 
 # License
 
-BSD-2-Clause
+[BSD-2-Clause](LICENSE.md)
