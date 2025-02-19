@@ -39,5 +39,9 @@ async function run(mode) {
   }
 }
 
-run('cjs');
-run('esm');
+async function runAll() {
+  await run('cjs');
+  await run('esm');
+}
+
+runAll();
