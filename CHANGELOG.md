@@ -6,6 +6,10 @@
 ### Removed
 ### Fixed
 
+## [0.0.9] - 2025-02-19
+### Fixed
+- [npm] Issue #6: Remove exports section from package.json to enable importing as ES module
+
 ## [0.0.8] - 2025-02-19
 ### Added
 - [test] Issue #5: Sequential test suites registration
