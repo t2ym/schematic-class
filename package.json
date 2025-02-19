@@ -1,15 +1,9 @@
 {
   "name": "schematic-class",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Integrated JSON schema for JavaScript classes",
   "main": "jsonclass.js",
   "module": "esm/jsonclass.js",
-  "exports": {
-    ".": {
-      "import": "./esm/jsonclass.js",
-      "require": "./jsonclass.js"
-    }
-  },
   "scripts": {
     "build": "node src/jsonclass.js ESM >esm/jsonclass.js && node src/jsonclass.js CJS >jsonclass.js",
     "test:extract-copyright": "head -4 jsonclass.js >test/coverage-copyright",
