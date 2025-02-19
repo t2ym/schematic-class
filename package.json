@@ -4,9 +4,29 @@
   "description": "Integrated JSON schema for JavaScript classes",
   "main": "jsonclass.js",
   "module": "esm/jsonclass.js",
+  "exports": {
+    ".": {
+      "import": "./esm/jsonclass.js",
+      "require": "./jsonclass.js"
+    }
+  },
   "scripts": {
     "build": "node src/jsonclass.js ESM >esm/jsonclass.js && node src/jsonclass.js CJS >jsonclass.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:extract-copyright": "head -4 jsonclass.js >test/coverage-copyright",
+    "test:instrument:cjs": "nyc instrument jsonclass.js test/coverage-instrumented && cd test/coverage-instrumented && mv jsonclass.js tmp && cat ../coverage-copyright tmp >jsonclass.js && rm tmp",
+    "test:instrument:esm": "nyc instrument esm/jsonclass.js test/coverage-instrumented && cat test/coverage-copyright test/coverage-instrumented/esm/jsonclass.js >test/coverage-instrumented/esm/jsonclass.mjs && rm test/coverage-instrumented/esm/jsonclass.js",
+    "test:instrument": "npm run test:extract-copyright && npm run test:instrument:cjs && npm run test:instrument:esm",
+    "test:run": "nyc --report-dir=test/coverage mocha test/run.test.js",
+    "test": "npm run test:instrument && npm run test:run"
+  },
+  "nyc": {
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "test"
+    ]
   },
   "repository": {
     "type": "git",
@@ -20,6 +40,10 @@
   ],
   "license": "BSD-2-Clause",
   "devDependencies": {
-    "preprocess": "^3.2.0"
+    "chai": "^4.5.0",
+    "mocha": "^11.1.0",
+    "nyc": "^17.1.0",
+    "preprocess": "^3.2.0",
+    "scenarist": "^1.1.10"
   }
 }
