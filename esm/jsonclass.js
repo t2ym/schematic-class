@@ -24,7 +24,7 @@ Copyright (c) 2025, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 - detailed demo, comprehensive test, packaging, etc.
 
 */
-// Version [0.0.7] - 2025-02-19
+// Version [0.0.8] - 2025-02-19
 class JSONClassError extends Error {
   constructor(message, options) {
     super(message, options);

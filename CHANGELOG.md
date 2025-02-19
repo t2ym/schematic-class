@@ -6,6 +6,14 @@
 ### Removed
 ### Fixed
 
+## [0.0.8] - 2025-02-19
+### Added
+- [test] Issue #5: Sequential test suites registration
+
+## [0.0.7] - 2025-02-19
+### Added
+- [test] Issue #5: Add demo test suites to check the test configuration
+
 ## [0.0.6] - 2025-02-18
 ### Added
 - [demo] Issue #4: Add a case for allowHiddenPropertyAssignment in instantiation from the same class instance
