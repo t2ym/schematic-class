@@ -12,6 +12,7 @@
 - [test] Issue #5 Add a case for invalid key type
 - [test] Issue #5 Add a case for validate(null)
 ### Changed
+- [design change] Issue #10: Reverse the order of arguments in JSONClass.register()
 ### Removed
 ### Fixed
 - Issue #8: Insert missing jsonPath.pop() before continue on finding a hidden property

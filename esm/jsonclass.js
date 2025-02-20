@@ -56,7 +56,12 @@ const JSONClass = (class JSONClass { // declaration and initialization at once w
     });
     return this;
   }
-  static register(preservePropertyOrder = undefined, schema = this.schema) {
+  static register(schema = this.schema, preservePropertyOrder = undefined) {
+    if (typeof schema === "boolean" && typeof preservePropertyOrder === "object" && preservePropertyOrder) { // old order
+      let tmp = preservePropertyOrder;
+      preservePropertyOrder = schema;
+      schema = tmp;
+    }
     let desc = Object.getOwnPropertyDescriptor(this, "schema");
     if (!desc || !desc.value || typeof desc.get === "function") {
       // override the schema getter in ES2018 syntax to a plain property with the same name
