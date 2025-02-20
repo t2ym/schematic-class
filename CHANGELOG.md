@@ -12,6 +12,7 @@
 - [test] Issue #5 Add a case for invalid key type
 - [test] Issue #5 Add a case for validate(null)
 - [test] Issue #5 Add cases for register(schema) and resigter(preservePropertyOrder, schema) (old compatible order)
+- [test] Issue #5 Add a case for unknown property error
 ### Changed
 - [design change] Issue #10: Reverse the order of arguments in JSONClass.register()
 ### Removed

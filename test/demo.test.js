@@ -801,6 +801,7 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
         }
         InvalidKeyTypeObject.register();
         chai.assert.throws(() => new InvalidKeyTypeObject({ property: "string value" }), JSONClassError, 'invalid key type');
+        chai.assert.throws(() => new ValueObject({ number_property: 1, unknown_property: null }), JSONClassError, 'type mismatch');
       }
       async checkpoint() {
 
