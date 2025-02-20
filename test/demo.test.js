@@ -817,6 +817,7 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
           invalid_type: "UnknownType"
         });
         chai.assert.throws(() => new InvalidSchemaObject({ invalid_type: "invalid value" }), JSONClassError, 'unregistered type');
+        chai.assert.throws(() => new KeyStringFormat({}), JSONClassError, 'unregistered type'); // invalid usage of KeyStringFormat
         const jsonPath6 = Object.assign([], { errors: [], recoveryMethod: "null" });
         chai.assert.strictEqual(new InvalidSchemaObject({ invalid_type: "invalid value" }, jsonPath6).invalid_type, null, `recoveryMethod: null`);
         const jsonPath7 = Object.assign([], { errors: [], recoveryMethod: "undefined" });
