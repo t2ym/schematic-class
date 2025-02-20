@@ -642,6 +642,9 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
           const array_error_json = JSON.parse(JSON.stringify(wrapped));
           array_error_json.array_property = "array is expected";
           chai.assert.throws(() => new WrappedJSONClass(array_error_json), JSONClassError, 'type mismatch');
+          const array_error_jsonPath = Object.assign([], { errors: [], recoveryMethod: "null" });
+          new WrappedJSONClass(array_error_json, array_error_jsonPath);
+          chai.assert.equal(array_error_jsonPath.errors[0].message, "type mismatch", "Array type mismatch");
           // hidden property does not throw on cloning an instance of the same class
           wrapped._hidden_string_property = "hidden string property value";
           ///console.log(`fixed wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);

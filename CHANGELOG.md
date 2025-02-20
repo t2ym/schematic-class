@@ -15,6 +15,7 @@
 - [test] Issue #5 Add a case for unknown property error
 - [test] Issue #5 Add a case for unregistered type without throwing an error
 - [test] Issue #5 Add a case for recoveryMethod null and undefined
+- [test] Issue #5 Add a case for Array type mismatch with recoveryMethod null
 ### Changed
 - [design change] Issue #10: Reverse the order of arguments in JSONClass.register()
 ### Removed
