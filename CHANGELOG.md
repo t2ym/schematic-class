@@ -5,6 +5,7 @@
 ### Changed
 ### Removed
 ### Fixed
+- Issue #8: Insert missing jsonPath.pop() before continue on finding a hidden property
 
 ## [0.0.9] - 2025-02-19
 ### Fixed

@@ -286,6 +286,7 @@ const JSONClass = (class JSONClass { // declaration and initialization at once w
           if (!(initProperties instanceof this.constructor)) {
             this.constructor.onError({ jsonPath, type: property, value: initProperties[property], message: "hidden property assignment" });
           }
+          jsonPath && jsonPath.pop();
           continue; // no recovery from errors
         }
       }
