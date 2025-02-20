@@ -9,6 +9,7 @@
 - [test] Issue #5 Add a case for non-JSONClass type mismatch
 - [test] Issue #5 Add a case for unregistered type
 - [test] Issue #5 Add a case for key mismatch
+- [test] Issue #5 Add a case for invalid key type
 ### Changed
 ### Removed
 ### Fixed

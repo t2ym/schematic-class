@@ -789,6 +789,14 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
         InvalidSchemaObject.register();
         chai.assert.throws(() => new InvalidSchemaObject({ invalid_type: "invalid value" }), JSONClassError, 'unregistered type');
         chai.assert.throws(() => new ObjectPropertyClass({ invalid_key: null }), JSONClassError, 'key mismatch');
+        JSONClassScope.inventory["HackedKeyType"] = Object;
+        class InvalidKeyTypeObject extends JSONClassScope {
+          static schema = {
+            HackedKeyType: "string"
+          };
+        }
+        InvalidKeyTypeObject.register();
+        chai.assert.throws(() => new InvalidKeyTypeObject({ property: "string value" }), JSONClassError, 'invalid key type');
       }
       async checkpoint() {
 
