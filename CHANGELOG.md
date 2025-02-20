@@ -5,6 +5,7 @@
 - [test] Issue #5 Add a throw case and a preservePropertyOrder: true case
 - [test] Issue #5 Insert assertions in demo test
 - [test] Issue #5 Add a case for non-enumerable hidden property definitions with null value for initProperties
+- [test] Issue #5 Add a case for Array type mismatch
 ### Changed
 ### Removed
 ### Fixed
