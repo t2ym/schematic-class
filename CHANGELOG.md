@@ -14,6 +14,7 @@
 - [test] Issue #5 Add cases for register(schema) and resigter(preservePropertyOrder, schema) (old compatible order)
 - [test] Issue #5 Add a case for unknown property error
 - [test] Issue #5 Add a case for unregistered type without throwing an error
+- [test] Issue #5 Add a case for recoveryMethod null and undefined
 ### Changed
 - [design change] Issue #10: Reverse the order of arguments in JSONClass.register()
 ### Removed
