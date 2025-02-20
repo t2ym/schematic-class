@@ -190,7 +190,7 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
           */
         if (jsonPath.errors && jsonPath.errors.length > 0) {
           // wrapped object is broken
-          console.log("JSONClass Errors:", jsonPath.errors);
+          //console.log("JSONClass Errors:", jsonPath.errors);
           (preservePropertyOrder 
             ? [
                 {
@@ -274,21 +274,330 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
           ).forEach((value, index) => {
             chai.assert.deepEqual(jsonPath.errors[index], value, `jsonPath.errors[${index}]`);
           });
-          console.log("Broken Object", wrapped);
-          console.log(`wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
-          console.log(`wrapped.validate(jsonPath2)`);
+          //console.log(`Broken Object preservePropertyOrder: ${preservePropertyOrder}`, JSON.stringify(wrapped, null, 2));
+          chai.assert.strictEqual(wrapped._hidden_string_property, undefined, `_hidden_string_property is undefined`);
+          switch (jsonPath.recoveryMethod) {
+          case "value":
+            chai.assert.strictEqual(wrapped.integer_property, 5.2, `invalid integer_property is assigned`);
+            chai.assert.strictEqual(wrapped.array_property[6], 123.4, `invalid array item is assigned`);
+            chai.assert.strictEqual(
+              wrapped.object_property
+                ['2d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64']
+                .formatted_string_property,
+              'x4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64', `invalid formatted_string_property is assigned`);
+            break;
+          default:
+            break;
+          }
+          chai.assert.strictEqual(wrapped.boolean_property, undefined, `missing boolean_property has the placeholder value undefined`);
+          chai.assert.strictEqual(JSON.stringify(wrapped, null, 2), (preservePropertyOrder
+            ? 
+`{
+  "unknown_property": "unknown property value",
+  "optional_string_property": "optional string property value",
+  "unknown_string_property": "unknown string property value",
+  "unknown_array_property": [
+    1,
+    2,
+    3
+  ],
+  "number_property": 1234.5,
+  "integer_property": 5.2,
+  "string_property": "string property value",
+  "object_property": {
+    "6d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64": {
+      "number_property": 123,
+      "formatted_string_property": "4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"
+    },
+    "2d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64": {
+      "number_property": 145,
+      "formatted_string_property": "x4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"
+    },
+    "4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64": null
+  },
+  "nullable_property": null,
+  "nullable_property2": {
+    "number_property": 100
+  },
+  "array_property": [
+    {
+      "number_property": 1
+    },
+    {
+      "number_property": 2
+    },
+    "array string value 0",
+    "array string value 1",
+    true,
+    false,
+    123.4,
+    "ABCD",
+    null
+  ]
+}`
+            :
+`{
+  "string_property": "string property value",
+  "number_property": 1234.5,
+  "integer_property": 5.2,
+  "optional_string_property": "optional string property value",
+  "nullable_property": null,
+  "nullable_property2": {
+    "number_property": 100
+  },
+  "array_property": [
+    {
+      "number_property": 1
+    },
+    {
+      "number_property": 2
+    },
+    "array string value 0",
+    "array string value 1",
+    true,
+    false,
+    123.4,
+    "ABCD",
+    null
+  ],
+  "object_property": {
+    "6d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64": {
+      "number_property": 123,
+      "formatted_string_property": "4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"
+    },
+    "2d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64": {
+      "number_property": 145,
+      "formatted_string_property": "x4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"
+    },
+    "4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64": null
+  },
+  "unknown_property": "unknown property value",
+  "unknown_string_property": "unknown string property value",
+  "unknown_array_property": [
+    1,
+    2,
+    3
+  ]
+}`
+            ), `JSON matches`);
+
+          //console.log(`wrapped.validate(jsonPath2)`);
           let jsonPath2 = Object.assign([], { errors: [], recoveryMethod: "value" });
           wrapped.validate(jsonPath2);
-          console.log(`jsonPath2.errors = `, jsonPath2.errors);
+          //console.log(`preservePropertyOrder: ${preservePropertyOrder}; jsonPath2.errors = `, JSON.stringify(jsonPath2.errors, null, 2));
+          chai.assert.strictEqual(JSON.stringify(jsonPath2.errors, null, 2), (preservePropertyOrder
+            ?
+`[
+  {
+    "jsonPath": [
+      "integer_property"
+    ],
+    "type": [
+      "integer"
+    ],
+    "value": 5.2,
+    "message": "type mismatch"
+  },
+  {
+    "jsonPath": [
+      "object_property",
+      "2d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64",
+      "formatted_string_property"
+    ],
+    "type": [
+      "undefined",
+      "ValueStringFormat"
+    ],
+    "value": "x4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64",
+    "message": "type mismatch"
+  },
+  {
+    "jsonPath": [
+      "array_property",
+      6
+    ],
+    "type": [
+      "string",
+      "boolean",
+      "integer",
+      "null",
+      "ValueObject"
+    ],
+    "value": 123.4,
+    "message": "type mismatch"
+  },
+  {
+    "jsonPath": [
+      "boolean_property"
+    ],
+    "type": [
+      "boolean"
+    ],
+    "message": "type mismatch"
+  }
+]`
+            :
+`[
+  {
+    "jsonPath": [
+      "integer_property"
+    ],
+    "type": [
+      "integer"
+    ],
+    "value": 5.2,
+    "message": "type mismatch"
+  },
+  {
+    "jsonPath": [
+      "boolean_property"
+    ],
+    "type": [
+      "boolean"
+    ],
+    "message": "type mismatch"
+  },
+  {
+    "jsonPath": [
+      "array_property",
+      6
+    ],
+    "type": [
+      "string",
+      "boolean",
+      "integer",
+      "null",
+      "ValueObject"
+    ],
+    "value": 123.4,
+    "message": "type mismatch"
+  },
+  {
+    "jsonPath": [
+      "object_property",
+      "2d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64",
+      "formatted_string_property"
+    ],
+    "type": [
+      "undefined",
+      "ValueStringFormat"
+    ],
+    "value": "x4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64",
+    "message": "type mismatch"
+  }
+]`
+            ), `jsonPath2.errors matches`);
           wrapped.object_property["4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"] = new ValueObject({
             number_property: 99,
             formatted_string_property: "3d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64",
           });
-          console.log(`modified wrapped = `, wrapped);
-          console.log(`wrapped.validate(jsonPath3)`);
+          //console.log(`modified wrapped = `, wrapped);
+          //console.log(`wrapped.validate(jsonPath3)`);
           let jsonPath3 = Object.assign([], { errors: [], recoveryMethod: "value" });
           wrapped.validate(jsonPath3);
-          console.log(`jsonPath3.errors = `, jsonPath3.errors);
+          //console.log(`preservePropertyOrder: ${preservePropertyOrder}; jsonPath3.errors = `, JSON.stringify(jsonPath3.errors, null, 2));
+          chai.assert.strictEqual(JSON.stringify(jsonPath3.errors, null, 2), (preservePropertyOrder
+            ?
+`[
+  {
+    "jsonPath": [
+      "integer_property"
+    ],
+    "type": [
+      "integer"
+    ],
+    "value": 5.2,
+    "message": "type mismatch"
+  },
+  {
+    "jsonPath": [
+      "object_property",
+      "2d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64",
+      "formatted_string_property"
+    ],
+    "type": [
+      "undefined",
+      "ValueStringFormat"
+    ],
+    "value": "x4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64",
+    "message": "type mismatch"
+  },
+  {
+    "jsonPath": [
+      "array_property",
+      6
+    ],
+    "type": [
+      "string",
+      "boolean",
+      "integer",
+      "null",
+      "ValueObject"
+    ],
+    "value": 123.4,
+    "message": "type mismatch"
+  },
+  {
+    "jsonPath": [
+      "boolean_property"
+    ],
+    "type": [
+      "boolean"
+    ],
+    "message": "type mismatch"
+  }
+]`
+            :
+`[
+  {
+    "jsonPath": [
+      "integer_property"
+    ],
+    "type": [
+      "integer"
+    ],
+    "value": 5.2,
+    "message": "type mismatch"
+  },
+  {
+    "jsonPath": [
+      "boolean_property"
+    ],
+    "type": [
+      "boolean"
+    ],
+    "message": "type mismatch"
+  },
+  {
+    "jsonPath": [
+      "array_property",
+      6
+    ],
+    "type": [
+      "string",
+      "boolean",
+      "integer",
+      "null",
+      "ValueObject"
+    ],
+    "value": 123.4,
+    "message": "type mismatch"
+  },
+  {
+    "jsonPath": [
+      "object_property",
+      "2d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64",
+      "formatted_string_property"
+    ],
+    "type": [
+      "undefined",
+      "ValueStringFormat"
+    ],
+    "value": "x4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64",
+    "message": "type mismatch"
+  }
+]`
+            ), `jsonPath3.errors matches`);
           /*
           // It is very risky to adjust JSON properties on errors
           json.integer_property = 5;
@@ -303,33 +612,153 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
           wrapped.array_property[6] = 123;
           wrapped.object_property["2d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"].formatted_string_property
             = "4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64";
-          console.log(`fixed wrapped =`, wrapped);
-          console.log(`wrapped.validate(jsonPath4)`);
+          ///console.log(`fixed wrapped =`, wrapped);
+          ///console.log(`wrapped.validate(jsonPath4)`);
           let jsonPath4 = Object.assign([], { errors: [], recoveryMethod: "value" });
           wrapped.validate(jsonPath4);
-          console.log(`jsonPath4.errors = `, jsonPath4.errors);
+          //console.log(`preservePropertyOrder: ${preservePropertyOrder}; jsonPath4.errors = `, JSON.stringify(jsonPath4.errors, null, 2));
+          chai.assert.equal(jsonPath4.errors.length, 0, `jsonPath4.errors is empty`);
           // hidden property does not throw on cloning an instance of the same class
           wrapped._hidden_string_property = "hidden string property value";
-          console.log(`fixed wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
+          ///console.log(`fixed wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
           let jsonPath5 = Object.assign([], { allowHiddenPropertyAssignment: true });
           wrapped = new WrappedJSONClass(wrapped, jsonPath5); // not throw; allow assignment of hidden properties
-          console.log(`cloned w/ allowHiddenPropertyAssignment wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
+          chai.assert.strictEqual(wrapped._hidden_string_property, "hidden string property value", `effective allowHiddenPropertyAssignment: true`);
+          ///console.log(`cloned w/ allowHiddenPropertyAssignment wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
           wrapped = new WrappedJSONClass(wrapped); // not throw; skip assignment of hidden properties and initialize as undefined
+          chai.assert.strictEqual(wrapped._hidden_string_property, undefined, `effective allowHiddenPropertyAssignment: false`);
         }
-        console.log(`cloned wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
+        ///console.log(`cloned wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
         Object.assign(wrapped, {
           _hidden_string_property: "hidden string property value",
           _hidden_number_property: -1,
         });
-        console.log(wrapped);
-        console.log(`wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
-        console.log(`wrapped._hidden_number_property = ${wrapped._hidden_number_property}`);
-        console.log(`JSON.stringify(wrapped) = ${JSON.stringify(wrapped, null, 2)}`);
+        ///console.log(wrapped);
+        chai.assert.strictEqual(wrapped._hidden_string_property, "hidden string property value", `hidden string property is set`);
+        chai.assert.strictEqual(wrapped._hidden_number_property, -1, `hidden number property is set`);
+        //console.log(`preservePropertyOrder: ${preservePropertyOrder}; JSON.stringify(wrapped) = ${JSON.stringify(wrapped, null, 2)}`);
+        chai.assert.strictEqual(JSON.stringify(wrapped, null, 2), (preservePropertyOrder
+          ?
+`{
+  "unknown_property": "unknown property value",
+  "optional_string_property": "optional string property value",
+  "unknown_string_property": "unknown string property value",
+  "unknown_array_property": [
+    1,
+    2,
+    3
+  ],
+  "number_property": 1234.5,
+  "integer_property": 5,
+  "string_property": "string property value",
+  "object_property": {
+    "6d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64": {
+      "number_property": 123,
+      "formatted_string_property": "4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"
+    },
+    "2d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64": {
+      "number_property": 145,
+      "formatted_string_property": "4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"
+    },
+    "4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64": {
+      "number_property": 99,
+      "formatted_string_property": "3d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"
+    }
+  },
+  "nullable_property": null,
+  "nullable_property2": {
+    "number_property": 100
+  },
+  "array_property": [
+    {
+      "number_property": 1
+    },
+    {
+      "number_property": 2
+    },
+    "array string value 0",
+    "array string value 1",
+    true,
+    false,
+    123,
+    "ABCD",
+    null
+  ],
+  "boolean_property": true
+}`
+          :
+`{
+  "string_property": "string property value",
+  "number_property": 1234.5,
+  "integer_property": 5,
+  "boolean_property": true,
+  "optional_string_property": "optional string property value",
+  "nullable_property": null,
+  "nullable_property2": {
+    "number_property": 100
+  },
+  "array_property": [
+    {
+      "number_property": 1
+    },
+    {
+      "number_property": 2
+    },
+    "array string value 0",
+    "array string value 1",
+    true,
+    false,
+    123,
+    "ABCD",
+    null
+  ],
+  "object_property": {
+    "6d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64": {
+      "number_property": 123,
+      "formatted_string_property": "4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"
+    },
+    "2d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64": {
+      "number_property": 145,
+      "formatted_string_property": "4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"
+    },
+    "4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64": {
+      "number_property": 99,
+      "formatted_string_property": "3d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"
+    }
+  },
+  "unknown_property": "unknown property value",
+  "unknown_string_property": "unknown string property value",
+  "unknown_array_property": [
+    1,
+    2,
+    3
+  ]
+}`
+          ), `JSON.stringify(wrapped) matches`);
         //console.log(`JSON.stringify({ ...wrapped, status: "validated" }) = ${JSON.stringify({ ...wrapped, status: "validated" }, null, 2)}`);
 
-        console.log(`JSONClassScope.inventory`, JSONClassScope.inventory);
-        console.log(`JSONClassScope.parsedTypes`, JSONClassScope.parsedTypes);
-        console.log(`JSONClassScope.preservePropertyOrder`, JSONClassScope.preservePropertyOrder);
+        ///console.log(`JSONClassScope.inventory`, JSONClassScope.inventory);
+        [ WrappedJSONClass, KeyStringFormat, ObjectPropertyClass, ValueStringFormat, ValueObject ].forEach((_class) => {
+          chai.assert.strictEqual(JSONClassScope.inventory[_class.name], _class, `class ${_class.name} exists in JSONClassScope.inventory`);
+        });
+        //console.log(`JSONClassScope.parsedTypes`, JSONClassScope.parsedTypes);
+        const parsedTypes = {
+          '-': [ '-' ],
+          '*': [ '*' ],
+          'string|undefined': [ 'string', 'undefined' ],
+          number: [ 'number' ],
+          integer: [ 'integer' ],
+          string: [ 'string' ],
+          ObjectPropertyClass: [ 'ObjectPropertyClass' ],
+          'null|ValueObject': [ 'null', 'ValueObject' ],
+          'undefined|ValueStringFormat': [ 'undefined', 'ValueStringFormat' ],
+          'string|boolean|integer|null|ValueObject[]': [ [ 'string', 'boolean', 'integer', 'null', 'ValueObject' ] ],
+          boolean: [ 'boolean' ]
+        };
+        for (let parsedType in parsedTypes) {
+          chai.assert.deepEqual(JSONClassScope.parsedTypes[parsedType], parsedTypes[parsedType], `JSONClassScope.parsedTypes["${parsedType}"] matches`);
+        }
+        chai.assert.strictEqual(JSONClassScope.preservePropertyOrder, preservePropertyOrder, `preservePropertyOrder: ${preservePropertyOrder} matches`);
       }
       async checkpoint() {
 

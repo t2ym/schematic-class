@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 - [test] Issue #5 Add a throw case and a preservePropertyOrder: true case
+- [test] Issue #5 Insert assertions in demo test
 ### Changed
 ### Removed
 ### Fixed
