@@ -67,9 +67,11 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
 
         class ObjectPropertyClass extends JSONClassScope {
           /* @if ESVERSION='ES2022' */
+          /*
           static schema = {
             KeyStringFormat: "null|ValueObject" // The key format must be registered BEFORE the object class which uses it
           };
+          */
           /* @endif */
           /* @if ESVERSION='ES2018' **
           static get schema() { return {
@@ -79,7 +81,9 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
           // Note: Property order is always preserved if the schema specifies a key format
           //       Unintuitively, preservePropertyOrder must not be true and is always automatically set as false if the schema specifies a key format
         }
-        ObjectPropertyClass.register();
+        ObjectPropertyClass.register({
+          KeyStringFormat: "null|ValueObject" // The key format must be registered BEFORE the object class which uses it
+        });
 
         class ValueStringFormat extends JSONClassScope {
           static get schema() {
@@ -783,11 +787,10 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
         }
         chai.assert.strictEqual(JSONClassScope.preservePropertyOrder, preservePropertyOrder, `preservePropertyOrder: ${preservePropertyOrder} matches`);
         class InvalidSchemaObject extends JSONClassScope {
-          static schema = {
-            invalid_type: "UnknownType"
-          };
         }
-        InvalidSchemaObject.register();
+        InvalidSchemaObject.register(false, {
+          invalid_type: "UnknownType"
+        });
         chai.assert.throws(() => new InvalidSchemaObject({ invalid_type: "invalid value" }), JSONClassError, 'unregistered type');
         chai.assert.throws(() => new ObjectPropertyClass({ invalid_key: null }), JSONClassError, 'key mismatch');
         JSONClassScope.inventory["HackedKeyType"] = Object;
