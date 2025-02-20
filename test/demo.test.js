@@ -91,8 +91,14 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
               "regex": /^[A-Za-z0-9]{64}\|.*$/,
             };
           }
+          static get preservePropertyOrder() {
+            return false;
+          }
         }
         ValueStringFormat.register();
+        const desc = Object.getOwnPropertyDescriptors(ValueStringFormat);
+        chai.assert.equal(desc.schema.value, ValueStringFormat.schema, `schema is converted to a plain property`);
+        chai.assert.equal(desc.preservePropertyOrder.value, ValueStringFormat.preservePropertyOrder, `preservePropertyOrder is converted to a plain property`);
 
         class ValueObject extends JSONClassScope {
           /* @if ESVERSION='ES2022' */
