@@ -7,6 +7,7 @@
 - [test] Issue #5 Add a case for non-enumerable hidden property definitions with null value for initProperties
 - [test] Issue #5 Add a case for Array type mismatch
 - [test] Issue #5 Add a case for non-JSONClass type mismatch
+- [test] Issue #5 Add a case for unregistered type
 ### Changed
 ### Removed
 ### Fixed

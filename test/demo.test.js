@@ -781,6 +781,13 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
           chai.assert.deepEqual(JSONClassScope.parsedTypes[parsedType], parsedTypes[parsedType], `JSONClassScope.parsedTypes["${parsedType}"] matches`);
         }
         chai.assert.strictEqual(JSONClassScope.preservePropertyOrder, preservePropertyOrder, `preservePropertyOrder: ${preservePropertyOrder} matches`);
+        class InvalidSchemaObject extends JSONClassScope {
+          static schema = {
+            invalid_type: "UnknownType"
+          };
+        }
+        InvalidSchemaObject.register();
+        chai.assert.throws(() => new InvalidSchemaObject({ invalid_type: "invalid value" }), JSONClassError, 'unregistered type');
       }
       async checkpoint() {
 
