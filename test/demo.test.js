@@ -822,6 +822,8 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
         const jsonPath7 = Object.assign([], { errors: [], recoveryMethod: "undefined" });
         chai.assert.strictEqual(new InvalidSchemaObject({ invalid_type: "invalid value" }, jsonPath7).invalid_type, undefined, `recoveryMethod: undefined`);
         chai.assert.throws(() => new ObjectPropertyClass({ invalid_key: null }), JSONClassError, 'key mismatch');
+        const jsonPath8 = Object.assign([], { errors: [], recoveryMethod: "undefined" });
+        new ObjectPropertyClass({ invalid_key: null }, jsonPath8);
         JSONClassScope.inventory["HackedKeyType"] = Object;
         class InvalidKeyTypeObject extends JSONClassScope {
           static schema = {

@@ -17,6 +17,7 @@
 - [test] Issue #5 Add a case for recoveryMethod null and undefined
 - [test] Issue #5 Add a case for Array type mismatch with recoveryMethod null
 - [test] Issue #5 Add a case for preservePropertyOrder getter function
+- [test] Issue #5 Add a case for invalid key type with recoveryMethod undefined
 ### Changed
 - [design change] Issue #10: Reverse the order of arguments in JSONClass.register()
 ### Removed
