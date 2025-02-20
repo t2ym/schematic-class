@@ -646,6 +646,9 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
           ///console.log(`cloned w/ allowHiddenPropertyAssignment wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
           wrapped = new WrappedJSONClass(wrapped); // not throw; skip assignment of hidden properties and initialize as undefined
           chai.assert.strictEqual(wrapped._hidden_string_property, undefined, `effective allowHiddenPropertyAssignment: false`);
+          const type_error_wrapped = new WrappedJSONClass(wrapped);
+          type_error_wrapped.nullable_property2 = JSON.parse(JSON.stringify(type_error_wrapped.nullable_property2)); // not a ValueObject instance
+          chai.assert.throws(() => type_error_wrapped.validate(), JSONClassError, 'type mismatch');
         }
         ///console.log(`cloned wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
         Object.assign(wrapped, {
