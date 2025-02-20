@@ -165,7 +165,23 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
             "message": "hidden property assignment"
           }, `e.cause`);
         }
-        let wrapped =
+        let wrapped = new WrappedJSONClass(null);
+        //console.log(`new WrappedJSONClass(null)`, Object.getOwnPropertyDescriptors(wrapped));
+        chai.assert.deepEqual(Object.getOwnPropertyDescriptors(wrapped), {
+            _hidden_string_property: {
+              value: undefined,
+              writable: true,
+              enumerable: false,
+              configurable: true
+            },
+            _hidden_number_property: {
+              value: undefined,
+              writable: true,
+              enumerable: false,
+              configurable: true
+            }
+          }, `new WrappedJSONClass(null) defines non-enumerable properties with undefined values for hidden properties`);
+        wrapped =
           new WrappedJSONClass(json, jsonPath); // accumulate multiple errors; messy and slow on many errors
           //new WrappedJSONClass(json); // throw on the first error
           //new WrappedJSONClass(json, null); // throw on the first error without jsonPath; fastest
