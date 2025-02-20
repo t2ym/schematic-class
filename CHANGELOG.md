@@ -10,6 +10,7 @@
 - [test] Issue #5 Add a case for unregistered type
 - [test] Issue #5 Add a case for key mismatch
 - [test] Issue #5 Add a case for invalid key type
+- [test] Issue #5 Add a case for validate(null)
 ### Changed
 ### Removed
 ### Fixed

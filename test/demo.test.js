@@ -634,6 +634,7 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
           wrapped.validate(jsonPath4);
           //console.log(`preservePropertyOrder: ${preservePropertyOrder}; jsonPath4.errors = `, JSON.stringify(jsonPath4.errors, null, 2));
           chai.assert.equal(jsonPath4.errors.length, 0, `jsonPath4.errors is empty`);
+          wrapped.validate(null);
           const array_error_json = JSON.parse(JSON.stringify(wrapped));
           array_error_json.array_property = "array is expected";
           chai.assert.throws(() => new WrappedJSONClass(array_error_json), JSONClassError, 'type mismatch');
