@@ -5,13 +5,13 @@
   "main": "jsonclass.js",
   "module": "esm/jsonclass.js",
   "scripts": {
-    "build": "node src/jsonclass.js ESM >esm/jsonclass.js && node src/jsonclass.js CJS >jsonclass.js",
+    "build": "node src/jsonclass.js ESM >esm/jsonclass.js && \\\nnode src/jsonclass.js CJS >jsonclass.js",
     "test:extract-copyright": "head -4 jsonclass.js >test/coverage-copyright",
-    "test:instrument:cjs": "nyc instrument jsonclass.js test/coverage-instrumented && cd test/coverage-instrumented && mv jsonclass.js tmp && cat ../coverage-copyright tmp >jsonclass.js && rm tmp",
-    "test:instrument:esm": "nyc instrument esm/jsonclass.js test/coverage-instrumented && cat test/coverage-copyright test/coverage-instrumented/esm/jsonclass.js >test/coverage-instrumented/esm/jsonclass.mjs && rm test/coverage-instrumented/esm/jsonclass.js",
-    "test:instrument": "npm run test:extract-copyright && npm run test:instrument:cjs && npm run test:instrument:esm",
+    "test:instrument:cjs": "nyc instrument jsonclass.js test/coverage-instrumented && \\\ncd test/coverage-instrumented && \\\nmv jsonclass.js tmp && \\\ncat ../coverage-copyright tmp >jsonclass.js && \\\nrm tmp",
+    "test:instrument:esm": "nyc instrument esm/jsonclass.js test/coverage-instrumented && \\\ncat test/coverage-copyright test/coverage-instrumented/esm/jsonclass.js >test/coverage-instrumented/esm/jsonclass.mjs && \\\nrm test/coverage-instrumented/esm/jsonclass.js",
+    "test:instrument": "npm run test:extract-copyright && \\\nnpm run test:instrument:cjs && \\\nnpm run test:instrument:esm",
     "test:run": "nyc --report-dir=test/coverage mocha test/run.test.js",
-    "test": "npm run test:instrument && npm run test:run"
+    "test": "npm run test:instrument && \\\nnpm run test:run"
   },
   "nyc": {
     "reporter": [
