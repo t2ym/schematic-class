@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 ### Added
+### Changed
+### Removed
+### Fixed
+
+## [0.0.10] - 2025-02-20
+### Added
 - [test] Issue #5 Add a throw case and a preservePropertyOrder: true case
 - [test] Issue #5 Insert assertions in demo test
 - [test] Issue #5 Add a case for non-enumerable hidden property definitions with null value for initProperties
@@ -21,7 +27,6 @@
 - [test] Issue #5 Add a case for unregistered type with invalid regex usage
 ### Changed
 - [design change] Issue #10: Reverse the order of arguments in JSONClass.register()
-### Removed
 ### Fixed
 - Issue #8: Insert missing jsonPath.pop() before continue on finding a hidden property
 - Issue #9: Check initProperties is truthy before `in` operator
