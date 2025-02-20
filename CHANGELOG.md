@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- [test] Issue #5 Add a throw case and a preservePropertyOrder: true case
 ### Changed
 ### Removed
 ### Fixed
