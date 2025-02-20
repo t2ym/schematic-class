@@ -277,7 +277,7 @@ const JSONClass = (class JSONClass { // declaration and initialization at once w
           configurable: true,
           enumerable: false, // hidden property
         });
-        if (loading && (property in initProperties) && !(jsonPath && jsonPath.allowHiddenPropertyAssignment)) {
+        if (loading && initProperties && (property in initProperties) && !(jsonPath && jsonPath.allowHiddenPropertyAssignment)) {
           // handling of hidden properties in initProperties:
           //  - value assigned if allowHiddenPropertyAssignment is true
           //  - error thrown if

@@ -8,6 +8,7 @@
 ### Removed
 ### Fixed
 - Issue #8: Insert missing jsonPath.pop() before continue on finding a hidden property
+- Issue #9: Check initProperties is truthy before `in` operator
 
 ## [0.0.9] - 2025-02-19
 ### Fixed
