@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Issue #11: Export JSONClassFactory to customize default values and method names
 ### Changed
 ### Removed
 ### Fixed

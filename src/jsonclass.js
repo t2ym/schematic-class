@@ -31,8 +31,13 @@ class JSONClassError extends Error {
     this.name = this.constructor.name;
   }
 }
-const JSONClass = (class JSONClass { // declaration and initialization at once with ES2018 syntax
-  static initClass(preservePropertyOrder = true) { // ES2018 compliant initialization called just after the class definition
+const JSONClassFactory = (
+  preservePropertyOrderDefaultValue = true,
+  validateMethodName = 'validate',
+  keysGeneratorMethodName = 'keys'
+) =>
+(class JSONClass { // declaration and initialization at once with ES2018 syntax
+  static initClass(preservePropertyOrder = preservePropertyOrderDefaultValue) { // ES2018 compliant initialization called just after the class definition
     // this method can be used to define a new scope for JSONClass in a derived class
     Object.defineProperties(this, {
       inventory: {
@@ -216,7 +221,7 @@ const JSONClass = (class JSONClass { // declaration and initialization at once w
   constructor(initProperties = null, jsonPath = []) {
     this.iterateProperties(initProperties, jsonPath);
   }
-  validate(jsonPath = []) {
+  [validateMethodName](jsonPath = []) {
     if (!jsonPath) {
       jsonPath = [];
     }
@@ -225,7 +230,7 @@ const JSONClass = (class JSONClass { // declaration and initialization at once w
     // not thrown
     return !jsonPath.errors || (jsonPath.errors && jsonPath.errors.length == 0)
   }
-  * keys(initProperties) {
+  * [keysGeneratorMethodName](initProperties) {
     const schema = this.constructor.schema;
     if (initProperties) {
       if (this.constructor.preservePropertyOrder) {
@@ -272,7 +277,7 @@ const JSONClass = (class JSONClass { // declaration and initialization at once w
     const inventory = this.constructor.inventory;
     const parsedTypes = this.constructor.parsedTypes;
     const loading = !(jsonPath && jsonPath.validate);
-    for (const property of this.keys(initProperties)) {
+    for (const property of this[keysGeneratorMethodName](initProperties)) {
       jsonPath && jsonPath.push(property);
       let currentSchema = schema[property] || schema["+"] || "undefined";
       if (currentSchema === "-") {
@@ -334,12 +339,13 @@ const JSONClass = (class JSONClass { // declaration and initialization at once w
     }
   }
 }).initClass();
+const JSONClass = JSONClassFactory();
 
 /* @if MODULE_TYPE='CJS' **
-module.exports = { JSONClass, JSONClassError };
+module.exports = { JSONClass, JSONClassError, JSONClassFactory };
 /* @endif */
 /* @if MODULE_TYPE='ESM' **
-export { JSONClass, JSONClassError };
+export { JSONClass, JSONClassError, JSONClassFactory };
 /* @endif */
 /* @if MODULE_TYPE='' */
 if (typeof require !== "undefined" && typeof "module" !== "undefined" && require.main === module) {
