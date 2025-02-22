@@ -348,8 +348,8 @@ module.exports = { JSONClass, JSONClassError, JSONClassFactory };
 export { JSONClass, JSONClassError, JSONClassFactory };
 /* @endif */
 /* @if MODULE_TYPE='' */
-if (typeof require !== "undefined" && typeof "module" !== "undefined" && require.main === module) {
-  const { argv } = require("node:process");
+if (typeof window === "object" || typeof require !== "undefined" && typeof "module" !== "undefined" && require.main === module) {
+  const { argv } = typeof window === "object" ? { argv: [] } : require("node:process");
   if (argv[2] === "CJS" || argv[2] === "ESM") {
     const fs = require("node:fs");
     const pp = require("preprocess");
