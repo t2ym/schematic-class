@@ -24,7 +24,7 @@ async function loadTarget(mode) {
 
 async function run(mode) {
   const Suite = require('scenarist');
-  const { JSONClass, JSONClassError } = await loadTarget(mode);
+  const { JSONClass, JSONClassError, JSONClassFactory } = await loadTarget(mode);
   const common = new Suite('common', `Unit Test Common Scope for ${mode}`);
   class CommonSuite extends Suite {
     async setup() {
@@ -37,7 +37,7 @@ async function run(mode) {
   common.test = CommonSuite;
   for (let scope of scopes) {
     const test = require(`./${scope}.test.js`);
-    test({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode });
+    test({ JSONClass, JSONClassError, JSONClassFactory, Suite, CommonSuite, chai, mode });
   }
 }
 

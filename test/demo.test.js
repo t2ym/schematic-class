@@ -3,14 +3,16 @@
 Copyright (c) 2025, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 */
 
-const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => {
+const test = ({ JSONClass, JSONClassError, JSONClassFactory, Suite, CommonSuite, chai, mode }) => {
   const scopes = [
-    { scope: 'demo_normalized', preservePropertyOrder: false },
-    { scope: 'demo_originalOrder', preservePropertyOrder: true },
+    { scope: 'demo_normalized', preservePropertyOrder: false, fromFactory: false, keysGeneratorMethodName: "keys", validateMethodName: "validate" },
+    { scope: 'demo_originalOrder', preservePropertyOrder: true, fromFactory: false, keysGeneratorMethodName: "keys", validateMethodName: "validate" },
+    { scope: 'demo_normalized_factory', preservePropertyOrder: false, fromFactory: true, keysGeneratorMethodName: "keysGenerator", validateMethodName: "validateWithSchema" },
+    { scope: 'demo_originalOrder_factory', preservePropertyOrder: true, fromFactory: true, keysGeneratorMethodName: "keysGenerator", validateMethodName: "validateWithSchema" },
   ];
 
-  scopes.forEach(({ scope, preservePropertyOrder }) => {
-    let suite = new Suite(scope, `Demo Test Suite [${mode}] - preservePropertyOrder: ${preservePropertyOrder}`);
+  scopes.forEach(({ scope, preservePropertyOrder, fromFactory, keysGeneratorMethodName, validateMethodName }) => {
+    let suite = new Suite(scope, `Demo Test Suite [${mode}] - preservePropertyOrder: ${preservePropertyOrder}, fromFactory: ${fromFactory}`);
 
     suite.test = class DemoTest extends CommonSuite {
       get description() { return 'Demo Test'; }
@@ -27,8 +29,15 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
         // Define a new local scope for the type inventory
         // The default preservePropertyOrder is true; Set as false to normalize the property order as the schema order
         // If the type inventory scope is global and preservePropertyOrder is false, there is no need to define a new scope.
-        const JSONClassScope = (class JSONClassScope extends JSONClass {}).initClass(preservePropertyOrder);
-        chai.assert.isOk(JSONClass.isPrototypeOf(JSONClassScope), `JSONClass is a prototype of JSONClassScope`);
+        const JSONClassScope = fromFactory
+          ? JSONClassFactory(preservePropertyOrder, validateMethodName, keysGeneratorMethodName)
+          : (class JSONClassScope extends JSONClass {}).initClass(preservePropertyOrder);
+        if (fromFactory) {
+          chai.assert.isNotOk(JSONClass.isPrototypeOf(JSONClassScope), `JSONClass is NOT a prototype of JSONClassScope`);
+        }
+        else {
+          chai.assert.isOk(JSONClass.isPrototypeOf(JSONClassScope), `JSONClass is a prototype of JSONClassScope`);
+        }
 
         class WrappedJSONClass extends JSONClassScope {
           static get schema() { // ES2018-compliant syntax to define a schema
@@ -423,9 +432,9 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
 }`
             ), `JSON matches`);
 
-          //console.log(`wrapped.validate(jsonPath2)`);
+          //console.log(`wrapped[validateMethodName](jsonPath2)`);
           let jsonPath2 = Object.assign([], { errors: [], recoveryMethod: "value" });
-          wrapped.validate(jsonPath2);
+          wrapped[validateMethodName](jsonPath2);
           //console.log(`preservePropertyOrder: ${preservePropertyOrder}; jsonPath2.errors = `, JSON.stringify(jsonPath2.errors, null, 2));
           chai.assert.strictEqual(JSON.stringify(jsonPath2.errors, null, 2), (preservePropertyOrder
             ?
@@ -534,9 +543,9 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
             formatted_string_property: "3d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64",
           });
           //console.log(`modified wrapped = `, wrapped);
-          //console.log(`wrapped.validate(jsonPath3)`);
+          //console.log(`wrapped[validateMethodName](jsonPath3)`);
           let jsonPath3 = Object.assign([], { errors: [], recoveryMethod: "value" });
-          wrapped.validate(jsonPath3);
+          wrapped[validateMethodName](jsonPath3);
           //console.log(`preservePropertyOrder: ${preservePropertyOrder}; jsonPath3.errors = `, JSON.stringify(jsonPath3.errors, null, 2));
           chai.assert.strictEqual(JSON.stringify(jsonPath3.errors, null, 2), (preservePropertyOrder
             ?
@@ -655,12 +664,12 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
           wrapped.object_property["2d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64"].formatted_string_property
             = "4d2ba64aaca23acc9667bd5127bccb33b805acf8bf02f00b88efe08a0f3f6f8d|Chrome 118.0.0.0 Windows x64";
           ///console.log(`fixed wrapped =`, wrapped);
-          ///console.log(`wrapped.validate(jsonPath4)`);
+          ///console.log(`wrapped[validateMethodName](jsonPath4)`);
           let jsonPath4 = Object.assign([], { errors: [], recoveryMethod: "value" });
-          wrapped.validate(jsonPath4);
+          wrapped[validateMethodName](jsonPath4);
           //console.log(`preservePropertyOrder: ${preservePropertyOrder}; jsonPath4.errors = `, JSON.stringify(jsonPath4.errors, null, 2));
           chai.assert.equal(jsonPath4.errors.length, 0, `jsonPath4.errors is empty`);
-          wrapped.validate(null);
+          wrapped[validateMethodName](null);
           const array_error_json = JSON.parse(JSON.stringify(wrapped));
           array_error_json.array_property = "array is expected";
           chai.assert.throws(() => new WrappedJSONClass(array_error_json), JSONClassError, 'type mismatch');
@@ -678,7 +687,7 @@ const test = ({ JSONClass, JSONClassError, Suite, CommonSuite, chai, mode }) => 
           chai.assert.strictEqual(wrapped._hidden_string_property, undefined, `effective allowHiddenPropertyAssignment: false`);
           const type_error_wrapped = new WrappedJSONClass(wrapped);
           type_error_wrapped.nullable_property2 = JSON.parse(JSON.stringify(type_error_wrapped.nullable_property2)); // not a ValueObject instance
-          chai.assert.throws(() => type_error_wrapped.validate(), JSONClassError, 'type mismatch');
+          chai.assert.throws(() => type_error_wrapped[validateMethodName](), JSONClassError, 'type mismatch');
         }
         ///console.log(`cloned wrapped._hidden_string_property = ${wrapped._hidden_string_property}`);
         Object.assign(wrapped, {
