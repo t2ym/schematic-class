@@ -4,6 +4,8 @@
 ### Added
 - Issue #11: Export JSONClassFactory to customize default values and method names
 - [test] Issue #11 Add cases for JSONClassFactory
+- Issue #13: validator() schema
+- [test] Issue #13 Add cases for validator() schema
 ### Changed
 - [internal design change] Issue #12 Replace isRegex and matchRegex() with validator()
 ### Removed

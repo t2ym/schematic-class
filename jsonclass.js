@@ -86,6 +86,9 @@ const JSONClassFactory = (
     if (this.schema.regex instanceof RegExp) {
       this.validator = (str) => this.schema.regex.test(str); // set the validator function
     }
+    else if (typeof this.schema.validator === "function") {
+      this.validator = this.schema.validator;
+    }
     for (let keySchema in this.schema) {
       if (this.inventory[keySchema]) {
         preservePropertyOrder = false; // override the flag

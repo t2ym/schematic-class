@@ -843,6 +843,36 @@ const test = async ({ JSONClass, JSONClassError, JSONClassFactory, Suite, Common
         InvalidKeyTypeObject.register();
         chai.assert.throws(() => new InvalidKeyTypeObject({ property: "string value" }), JSONClassError, 'invalid key type');
         chai.assert.throws(() => new ValueObject({ number_property: 1, unknown_property: null }), JSONClassError, 'type mismatch');
+        class IntegerRangeValidator extends JSONClassScope {
+          static schema = {
+            validator(value) { return Number.isInteger(value) && value >= 0 && value <= 100; }
+          }
+        }
+        IntegerRangeValidator.register();
+        class StartsWithValidator extends JSONClassScope {
+          static schema = {
+            validator(value) { return typeof value === "string" && value.startsWith("prefix:"); }
+          }
+        }
+        StartsWithValidator.register();
+        class ValidatorTest extends JSONClassScope {
+          static schema = {
+            StartsWithValidator: "IntegerRangeValidator",
+          }
+        }
+        ValidatorTest.register();
+        new ValidatorTest({ "prefix:property": 50 });
+        chai.assert.throws(() => new ValidatorTest({ "prefix:property": 150 }), JSONClassError, 'type mismatch');
+        chai.assert.throws(() => new ValidatorTest({ "invalid prefix:property": 50 }), JSONClassError, 'key mismatch');
+        chai.assert.throws(() => new ValidatorTest({ "invalid prefix:property": 150 }), JSONClassError, 'key mismatch');
+        class ValidatorTest2 extends JSONClassScope {
+          static schema = {
+            array_property: "IntegerRangeValidator[]",
+          }
+        }
+        ValidatorTest2.register();
+        new ValidatorTest2({ "array_property": [ 10, 20, 30 ] });
+        chai.assert.throws(() => new ValidatorTest2({ "array_property": [ 150, 200, 300 ] }), JSONClassError, 'type mismatch');
       }
       async checkpoint() {
 
