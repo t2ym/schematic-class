@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 ### Added
+### Changed
+### Removed
+### Fixed
+
+## [0.0.11] - 2025-02-22
+### Added
 - Issue #11: Export JSONClassFactory to customize default values and method names
 - [test] Issue #11 Add cases for JSONClassFactory
 - Issue #13: validator() schema
