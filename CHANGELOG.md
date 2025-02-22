@@ -2,11 +2,14 @@
 
 ## [Unreleased]
 ### Added
-- Issue #15: detector() schema to define a meta type to detect a real type
-- [test] Issue #15 Add cases for detector() schema
 ### Changed
 ### Removed
 ### Fixed
+
+## [0.0.12] - 2025-02-22
+### Added
+- Issue #15: detector() schema to define a meta type to detect a real type
+- [test] Issue #15 Add cases for detector() schema
 
 ## [0.0.11] - 2025-02-22
 ### Added
