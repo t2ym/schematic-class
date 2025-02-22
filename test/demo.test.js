@@ -3,7 +3,7 @@
 Copyright (c) 2025, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 */
 
-const test = ({ JSONClass, JSONClassError, JSONClassFactory, Suite, CommonSuite, chai, mode }) => {
+const test = async ({ JSONClass, JSONClassError, JSONClassFactory, Suite, CommonSuite, chai, mode }) => {
   const scopes = [
     { scope: 'demo_normalized', preservePropertyOrder: false, fromFactory: false, keysGeneratorMethodName: "keys", validateMethodName: "validate" },
     { scope: 'demo_originalOrder', preservePropertyOrder: true, fromFactory: false, keysGeneratorMethodName: "keys", validateMethodName: "validate" },
@@ -11,7 +11,7 @@ const test = ({ JSONClass, JSONClassError, JSONClassFactory, Suite, CommonSuite,
     { scope: 'demo_originalOrder_factory', preservePropertyOrder: true, fromFactory: true, keysGeneratorMethodName: "keysGenerator", validateMethodName: "validateWithSchema" },
   ];
 
-  scopes.forEach(({ scope, preservePropertyOrder, fromFactory, keysGeneratorMethodName, validateMethodName }) => {
+  await Promise.all(scopes.map(async ({ scope, preservePropertyOrder, fromFactory, keysGeneratorMethodName, validateMethodName }) => {
     let suite = new Suite(scope, `Demo Test Suite [${mode}] - preservePropertyOrder: ${preservePropertyOrder}, fromFactory: ${fromFactory}`);
 
     suite.test = class DemoTest extends CommonSuite {
@@ -858,9 +858,9 @@ const test = ({ JSONClass, JSONClassError, JSONClassFactory, Suite, CommonSuite,
     };
 
     for (var i = 0; i < suite.test.length; i++) {
-      suite.run(i);
+      await suite.run(i);
     }
-  });
+  }));
 
 };
 

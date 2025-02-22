@@ -37,7 +37,7 @@ async function run(mode) {
   common.test = CommonSuite;
   for (let scope of scopes) {
     const test = require(`./${scope}.test.js`);
-    test({ JSONClass, JSONClassError, JSONClassFactory, Suite, CommonSuite, chai, mode });
+    await test({ JSONClass, JSONClassError, JSONClassFactory, Suite, CommonSuite, chai, mode });
   }
 }
 

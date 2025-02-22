@@ -7,6 +7,7 @@
 ### Changed
 ### Removed
 ### Fixed
+- [test] Issue #5 Make the test runner function async
 
 ## [0.0.10] - 2025-02-20
 ### Added
