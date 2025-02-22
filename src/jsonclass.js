@@ -84,7 +84,7 @@ const JSONClassFactory = (
       this.schemaKeys.splice(plusSchemaIndex, 1); // remove "+" schema
     }
     if (this.schema.regex instanceof RegExp) {
-      this.isRegex = true; // precompute the fixed flag
+      this.validator = (str) => this.schema.regex.test(str); // set the validator function
     }
     for (let keySchema in this.schema) {
       if (this.inventory[keySchema]) {
@@ -105,9 +105,6 @@ const JSONClassFactory = (
       desc = Object.getOwnPropertyDescriptor(this, "preservePropertyOrder");
     }
     this.inventory[this.name] = this;
-  }
-  static matchRegex(str) {
-    return this.isRegex && this.schema.regex.test(str);
   }
   static create(types, value, jsonPath) {
     //console.log(`${this.name}.create(): path: ${JSON.stringify(jsonPath)}, types: ${types}, value: ${value}`);
@@ -165,8 +162,8 @@ const JSONClassFactory = (
         else {
           let valueType;
           if (Object.hasOwn(inventory, type) && JSONClass.isPrototypeOf(valueType = inventory[type])) {
-            if (valueType.isRegex) {
-              if (valueType.matchRegex(value)) {
+            if (valueType.validator) {
+              if (valueType.validator(value)) {
                 return value;
               }
             }
@@ -316,7 +313,7 @@ const JSONClassFactory = (
             jsonPath && jsonPath.push(key);
             const originalValue = initProperties[key];
             let value = originalValue;
-            if (!keyType.matchRegex(key)) {
+            if (!keyType.validator(key)) {
               value = this.constructor.onError({ jsonPath, type: property, key, value, message: "key mismatch" });
             }
             if (value === originalValue) {

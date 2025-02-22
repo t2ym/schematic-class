@@ -5,6 +5,7 @@
 - Issue #11: Export JSONClassFactory to customize default values and method names
 - [test] Issue #11 Add cases for JSONClassFactory
 ### Changed
+- [internal design change] Issue #12 Replace isRegex and matchRegex() with validator()
 ### Removed
 ### Fixed
 - [test] Issue #5 Make the test runner function async
