@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 ### Added
+- Issue #15: detector() schema to define a meta type to detect a real type
+- [test] Issue #15 Add cases for detector() schema
 ### Changed
 ### Removed
 ### Fixed

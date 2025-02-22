@@ -873,6 +873,39 @@ const test = async ({ JSONClass, JSONClassError, JSONClassFactory, Suite, Common
         ValidatorTest2.register();
         new ValidatorTest2({ "array_property": [ 10, 20, 30 ] });
         chai.assert.throws(() => new ValidatorTest2({ "array_property": [ 150, 200, 300 ] }), JSONClassError, 'type mismatch');
+
+        (class TypeAValidator extends JSONClassScope { }).register({
+          validator(value) { return value === "A"; }
+        });
+        class TypeA extends JSONClassScope {
+          static schema = {
+            type: "TypeAValidator",
+            property: "string"
+          }
+        }
+        TypeA.register();
+        (class TypeBValidator extends JSONClassScope { }).register({
+          validator(value) { return value === "B"; }
+        });
+        class TypeB extends JSONClassScope {
+          static schema = {
+            type: "TypeBValidator",
+            property: "string"
+          }
+        }
+        TypeB.register();
+        (class TypeDetectorMetaType extends JSONClassScope { }).register({
+          detector(value) { return { "A": "TypeA", "B": "TypeB" }[value && value.type]; }
+        });
+        class MultitypeObject extends JSONClassScope {
+          static schema = {
+            accept_multi_types: "TypeDetectorMetaType"
+          }
+        }
+        MultitypeObject.register();
+        new MultitypeObject({ accept_multi_types: { type: "A", property: "this is TypeA" } });
+        new MultitypeObject({ accept_multi_types: { type: "B", property: "this is TypeB" } });
+        chai.assert.throws(() => new MultitypeObject({ accept_multi_types: { type: "unknown", property: "this is unknown type" } }), JSONClassError, 'type mismatch');
       }
       async checkpoint() {
 

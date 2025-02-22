@@ -89,6 +89,9 @@ const JSONClassFactory = (
     else if (typeof this.schema.validator === "function") {
       this.validator = this.schema.validator;
     }
+    if (typeof this.schema.detector === "function") {
+      this.detector = this.schema.detector;
+    }
     for (let keySchema in this.schema) {
       if (this.inventory[keySchema]) {
         preservePropertyOrder = false; // override the flag
@@ -108,6 +111,7 @@ const JSONClassFactory = (
       desc = Object.getOwnPropertyDescriptor(this, "preservePropertyOrder");
     }
     this.inventory[this.name] = this;
+    return this;
   }
   static create(types, value, jsonPath) {
     //console.log(`${this.name}.create(): path: ${JSON.stringify(jsonPath)}, types: ${types}, value: ${value}`);
@@ -172,17 +176,29 @@ const JSONClassFactory = (
             }
             else {
               if (typeof value === "object" && value !== null) {
-                if (loading) {
-                  return new valueType(value, jsonPath);
+                let detectedType;
+                if (valueType.detector) {
+                  detectedType = valueType.detector(value);
+                  if (detectedType && Object.hasOwn(inventory, detectedType) && JSONClass.isPrototypeOf(inventory[detectedType])) {
+                    valueType = inventory[detectedType];
+                  }
                 }
                 else {
-                  if (value instanceof JSONClass) {
-                    value.iterateProperties(value, jsonPath);
+                  detectedType = type;
+                }
+                if (detectedType) {
+                  if (loading) {
+                    return new valueType(value, jsonPath);
                   }
                   else {
-                    this.onError({ jsonPath, type, value, message: "type mismatch" });
+                    if (value instanceof JSONClass) {
+                      value.iterateProperties(value, jsonPath);
+                    }
+                    else {
+                      this.onError({ jsonPath, type: detectedType, value, message: "type mismatch" });
+                    }
+                    return value;
                   }
-                  return value;
                 }
               }
             }
