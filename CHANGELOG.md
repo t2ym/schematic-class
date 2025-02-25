@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- [doc] Issue #16 Add API documentation
 ### Changed
 ### Removed
 ### Fixed
