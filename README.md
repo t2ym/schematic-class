@@ -139,7 +139,8 @@ const JSONClassScope = JSONClassFactory(/* parameters */);
   - `keysGeneratorMethodName = 'keys'` : `string`: set a non-conflicting name to customize the name of `*keys()` generator method
 
 - Return Value
-  - `JSONClass` : `class` : Each scoped `JSONClass` object is unique; Reexport it to share the scoped class among different sources
+  - `JSONClass` : `class` : Each scoped `JSONClass` object is unique
+    - Reexport it to share the scoped class among different sources
 
 - Example
 ```js
@@ -365,6 +366,8 @@ if (jsonPath.errors.length > 0) {
 
 #### Special Types
 - `"undefined"`: optional property
+  - Used with other type(s) to specify the valid type(s)
+  - For example, `"undefined|string"` is for an optional string property
 - `"-"`: hidden property
   - Hidden properties are defined as `enumerable: false` and do not appear in `JSON.stringify()`
 - `RegExp` literal object
@@ -434,18 +437,21 @@ class RegexFormat extends JSONClass {
   };
 }
 RegexFormat.register();
+
 class NonNegativeInteger extends JSONClass {
   static schema = {
     validator(value) { return Number.isInteger(value) && value >= 0; }
   };
 }
 NonNegativeInteger.register();
+
 class FormattedKeysObject extends JSONClass {
   static schema = {
     RegexFormat: "TypeName",
   };
 }
 FormattedKeysObject.register();
+
 class ConstrainedValueObject extends JSONClass {
   static schema = {
     formatted_property: "RegexFormat",
@@ -496,6 +502,7 @@ class DerivedClassDetector extends JSONClass {
   };
 }
 DerivedClassDetector.register();
+
 class VariableTypeValueClass extends JSONClass {
   static schema = {
     variable_type: "DerivedClassDetector"
