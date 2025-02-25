@@ -18,7 +18,7 @@ MyClass.register();
 class Career extends JSONClass { }
 Career.register({ company: "string" }); // schema on register()
 
-(class BirthDay extends JSONClass {}).register({ // regex pseudo-type
+(class BirthDay extends JSONClass {}).register({ // regex meta-type
   regex: /^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/
 });
 
@@ -52,68 +52,25 @@ catch (e) {
     - [Scoped JSONClass](#scoped-jsonclass)
   - [API](#api)
     - [`JSONClassFactory()` function](#jsonclassfactory-function)
-      - [Parameters](#parameters)
-      - [Return Value](#return-value)
-      - [Example](#example)
     - [`JSONClass` class](#jsonclass-class)
       - [`static initClass(preservePropertyOrder)`](#static-initclasspreservepropertyorder)
-        - [Parameters](#parameters-1)
-        - [Initialized Class Properties](#initialized-class-properties)
-        - [Return Value](#return-value-1)
       - [`static register(schema = this.schema, preservePropertyOrder = undefined)`](#static-registerschema--thisschema-preservepropertyorder--undefined)
-        - [Parameters](#parameters-2)
-        - [Example](#example-1)
       - [\[Internal\] `static create(types, value, jsonPath)`](#internal-static-createtypes-value-jsonpath)
-        - [Parameters](#parameters-3)
-        - [Return Value](#return-value-2)
       - [\[Internal\] `static onError(errorParameters)`](#internal-static-onerrorerrorparameters)
-        - [Parameters](#parameters-4)
       - [`constructor(initProperties = null, jsonPath = [])`](#constructorinitproperties--null-jsonpath--)
-        - [Parameters](#parameters-5)
-        - [Return Value](#return-value-3)
-        - [Example](#example-2)
       - [`validate(jsonPath = [])`](#validatejsonpath--)
-        - [Parameters](#parameters-6)
-        - [Return Value](#return-value-4)
-        - [Example](#example-3)
       - [\[Internal\] `* keys(initProperties)`](#internal--keysinitproperties)
-        - [Parameters](#parameters-7)
       - [\[Internal\] `iterateProperties(initProperties, jsonPath)`](#internal-iteratepropertiesinitproperties-jsonpath)
-        - [Parameters](#parameters-8)
     - [Schema Properties](#schema-properties)
       - [Enumerable Properties](#enumerable-properties)
-        - [`any_valid_property_name`: enumerable property](#any_valid_property_name-enumerable-property)
       - [Special Properties](#special-properties)
-        - [`any_valid_property_name`: hidden property](#any_valid_property_name-hidden-property)
-        - [`"+"`: additional property](#-additional-property)
-        - [`"regex"`: regex property](#regex-regex-property)
-        - [`validator(value)`: validator function](#validatorvalue-validator-function)
-        - [`detector(value)`: detector function](#detectorvalue-detector-function)
     - [Schema Types](#schema-types)
       - [Primitive Types](#primitive-types)
-        - [`"string"`: string type](#string-string-type)
-        - [`"number"`: number type](#number-number-type)
-        - [`"integer"`: integer type](#integer-integer-type)
-        - [`"boolean"`: boolean type](#boolean-boolean-type)
-        - [`"null"`: null value](#null-null-value)
-        - [`"object"`: object type](#object-object-type)
       - [Special Types](#special-types)
-        - [`"undefined"`: optional property](#undefined-optional-property)
-        - [`"-"`: hidden property](#--hidden-property)
-        - [`RegExp` literal object](#regexp-literal-object)
       - [Class Types](#class-types)
-        - [`AnyClassName`: class with schema](#anyclassname-class-with-schema)
-      - [Pseudo-Types](#pseudo-types)
-        - [`AnyClassName`: pseudo-type name](#anyclassname-pseudo-type-name)
+      - [Meta-Types](#meta-types)
       - [Type Operators](#type-operators)
-        - [`|`: or operator](#-or-operator)
-        - [`[]`: array operator](#-array-operator)
       - [Example Types](#example-types)
-        - [Primitive Types](#primitive-types-1)
-        - [Class Object Types](#class-object-types)
-        - [Pseudo-Types](#pseudo-types-1)
-        - [Variable Type Detector](#variable-type-detector)
-        - [Hidden Properties](#hidden-properties)
   - [Test](#test)
   - [License](#license)
 
@@ -176,15 +133,15 @@ const JSONClassScope = JSONClassFactory(/* parameters */);
 
 ### `JSONClassFactory()` function
 
-#### Parameters
-- `preservePropertyOrderDefaultValue = true` : `boolean`: `true` to preserve the order of properties as default
-- `validateMethodName = 'validate'` : `string`: set a non-conflicting name to customize the name of `validate()` method
-- `keysGeneratorMethodName = 'keys'` : `string`: set a non-conflicting name to customize the name of `*keys()` generator method
+- Parameters
+  - `preservePropertyOrderDefaultValue = true` : `boolean`: `true` to preserve the order of properties as default
+  - `validateMethodName = 'validate'` : `string`: set a non-conflicting name to customize the name of `validate()` method
+  - `keysGeneratorMethodName = 'keys'` : `string`: set a non-conflicting name to customize the name of `*keys()` generator method
 
-#### Return Value
-- `JSONClass` : `class` : Each scoped `JSONClass` object is unique; Reexport it to share the scoped class among different sources
+- Return Value
+  - `JSONClass` : `class` : Each scoped `JSONClass` object is unique; Reexport it to share the scoped class among different sources
 
-#### Example
+- Example
 ```js
 const JSONClass = JSONClassFactory(false);
 ```
@@ -201,30 +158,30 @@ const JSONClass = JSONClassFactory(false);
 
 - Initialize the registered class inventory
 
-##### Parameters
-- `preservePropertyOrder = preservePropertyOrderDefaultValue`: `boolean`: `true` to preserve the order of properties; `false` to normalize the order as its schema definitions
+- Parameters
+  - `preservePropertyOrder = preservePropertyOrderDefaultValue`: `boolean`: `true` to preserve the order of properties; `false` to normalize the order as its schema definitions
 
-##### Initialized Class Properties
-- `static inventory = {}`: `object`: inventory of defined types
-  - key: `string`: type name, which is defined by the class name
-  - value: `class`: class for the type
-- `static parsedTypes = {}`: `object`: types in schema are parsed and stored
-  - key: `string`: schema entry in string
-  - value: `Array`: parsed types in an array
-- `static preservePropertyOrder`: `boolean` or `undefined`: handed from the parameter
+- Initialized Class Properties
+  - `static inventory = {}`: `object`: inventory of defined types
+    - key: `string`: type name, which is defined by the class name
+    - value: `class`: class for the type
+  - `static parsedTypes = {}`: `object`: types in schema are parsed and stored
+    - key: `string`: schema entry in string
+    - value: `Array`: parsed types in an array
+  - `static preservePropertyOrder`: `boolean` or `undefined`: handed from the parameter
 
-##### Return Value
-- `this` `JSONClass` object
+- Return Value
+  - `this` `JSONClass` object
 
 #### `static register(schema = this.schema, preservePropertyOrder = undefined)`
 
 - Register the schema for the class and customize the `preservePropertyOrder`
 
-##### Parameters
-- `schema = this.schema`: `object`: specify the schema for the class; defaults to `this.schema`
-- `preservePropertyOrder`: `boolean`: customize `preservePropertyOrder` if necessary
+- Parameters
+  - `schema = this.schema`: `object`: specify the schema for the class; defaults to `this.schema`
+  - `preservePropertyOrder`: `boolean`: customize `preservePropertyOrder` if necessary
 
-##### Example
+- Example
 ```js
 // Schema in register() parameter
 class MyClass extends JSONClass {
@@ -258,52 +215,52 @@ MyGetterClass.register();
 - (Currently) internal method to create a typed value
   - It recursively creates typed values in properties if necessary
 
-##### Parameters
-- `types`: `Array`: an array of candidate types in strings
-- `value`: `value in a JSON type`: target value to create the typed value
-- `jsonPath`: `Array`: stack of JSON property names handed by the caller
+- Parameters
+  - `types`: `Array`: an array of candidate types in strings
+  - `value`: `value in a JSON type`: target value to create the typed value
+  - `jsonPath`: `Array`: stack of JSON property names handed by the caller
 
-##### Return Value
-- The typed object value or the primitive value
+- Return Value
+  - The typed object value or the primitive value
 
 #### [Internal] `static onError(errorParameters)`
 
 - (Internal) method to throw an `Error` object or accumulate errors in `jsonPath.errors`
 
-##### Parameters
-- `errorParameters`: `object`:
-  - `properties`:
-    - `jsonPath`: `Array`: stack of JSON property names handed by the caller
-    - `type`: `Array` or `string`: (the list of) expected type(s)
-    - `key`: `string`: optional property key
-    - `value`: `any`: the value to validate
-    - `message`: `string`: error message
-      - "type mismatch": not (one of) the expected type(s)
-      - "unregistered type": unknown type
-      - "hidden property assignment": unexpected assignment of a hidden property
-      - "key mismatch": not the expected key format
-      - "invalid key type": unknown key format type
+- Parameters
+  - `errorParameters`: `object`:
+    - `properties`:
+      - `jsonPath`: `Array`: stack of JSON property names handed by the caller
+      - `type`: `Array` or `string`: (the list of) expected type(s)
+      - `key`: `string`: optional property key
+      - `value`: `any`: the value to validate
+      - `message`: `string`: error message
+        - "type mismatch": not (one of) the expected type(s)
+        - "unregistered type": unknown type
+        - "hidden property assignment": unexpected assignment of a hidden property
+        - "key mismatch": not the expected key format
+        - "invalid key type": unknown key format type
 
 #### `constructor(initProperties = null, jsonPath = [])`
 
 - Instantiate a class instance, validating the handed `initProperties` against the schema
 - It can throw `JSONClassError` on the first error when `jsonPath.errors` is not set
 
-##### Parameters
-- `initProperties = null`: `JSON object`: specify the properties for the instance
-  - `null` to initialize the object without initial properties; no validation
-- `jsonPath = []`: `Array`: optionally set a stack of the current json property paths in strings
-  - `jsonPath.errors`: `Array`: if set as `[]`, errors are accumulated instead of throwing on the first error; the array can be inspected on return to check errors
-  - `jsonPath.recoveryMethod = "undefined"`: `string`: if `errors` is set, one of the following recovery methods on errors can be specified
-    - "value": preserve the value
-    - "null": replace with null
-    - "undefined": discard the property; this is the default
-  - `jsonPath.allowHiddenPropertyAssignment`: `boolean`: `true` to allow hidden property assignments; `false` or `undefined` to prohibit hidden property assignments
+- Parameters
+  - `initProperties = null`: `JSON object`: specify the properties for the instance
+    - `null` to initialize the object without initial properties; no validation
+  - `jsonPath = []`: `Array`: optionally set a stack of the current json property paths in strings
+    - `jsonPath.errors`: `Array`: if set as `[]`, errors are accumulated instead of throwing on the first error; the array can be inspected on return to check errors
+    - `jsonPath.recoveryMethod = "undefined"`: `string`: if `errors` is set, one of the following recovery methods on errors can be specified
+      - "value": preserve the value
+      - "null": replace with null
+      - "undefined": discard the property; this is the default
+    - `jsonPath.allowHiddenPropertyAssignment`: `boolean`: `true` to allow hidden property assignments; `false` or `undefined` to prohibit hidden property assignments
 
-##### Return Value
-- The typed class instance, whose properties are validated if `jsonPath.errors` is not set or `jsonPath.errors` is empty
+- Return Value
+  - The typed class instance, whose properties are validated if `jsonPath.errors` is not set or `jsonPath.errors` is empty
 
-##### Example
+- Example
 ```js
 try {
   let jsonData = JSON.parse(jsonString);
@@ -328,14 +285,14 @@ if (jsonPath.errors.length > 0) {
   - It can throw on the first error or accumulate errors in `jsonPath.errors`
 - The method name can be customized with `JSONClassFactory()`'s second parameter `validateMethodName` to avoid possible conflict with expected property names to validate
 
-##### Parameters
-- `jsonPath = []`: `Array`: the same as that of the `constructor` parameter
+- Parameters
+  - `jsonPath = []`: `Array`: the same as that of the `constructor` parameter
 
-##### Return Value
-- `boolean`: `true` when validated; `false` when not validated
-  - If `jsonPath.errors` is not set, `true` is always returned as a `JSONErrorClass` object is thrown on the first error
+- Return Value
+  - `boolean`: `true` when validated; `false` when not validated
+    - If `jsonPath.errors` is not set, `true` is always returned as a `JSONErrorClass` object is thrown on the first error
 
-##### Example
+- Example
 ```js
 let jsonData = JSON.parse(jsonString);
 let obj = MyClass(jsonData);
@@ -362,63 +319,63 @@ if (jsonPath.errors.length > 0) {
   - The order of generated keys is controlled by `preservePropertyOrder` class property
 - The method name can be customized with `JSONClassFactory()`'s third parameter `keysGeneratorMethodName` to avoid possible conflict with expected property names to validate
 
-##### Parameters
-- `initProperties`: `object`: the target value object to validate
+- Parameters
+  - `initProperties`: `object`: the target value object to validate
 
 #### [Internal] `iterateProperties(initProperties, jsonPath)`
 
 - Internal method to iterate over properties to validate and assign them
   - Called from `constructor()`
 
-##### Parameters
-- `initProperties`: `object`: the target value object to validate
-- `jsonPath = []`: `Array`: the same as that of the `constructor` parameter
+- Parameters
+  - `initProperties`: `object`: the target value object to validate
+  - `jsonPath = []`: `Array`: the same as that of the `constructor` parameter
 
 
 ### Schema Properties
 
 #### Enumerable Properties
-##### `any_valid_property_name`: enumerable property
+- `any_valid_property_name`: enumerable property
 
 #### Special Properties
-##### `any_valid_property_name`: hidden property
+- `any_valid_property_name`: hidden property
   - Marked with `"-"` special type
-##### `"+"`: additional property
-##### `"regex"`: regex property
-  - Used in a pseudo-type to specify a regex pattern in the value
-##### `validator(value)`: validator function
-  - Used in a pseudo-type to specify a callback function to validate the value
+- `"+"`: additional property
+- `"regex"`: regex property
+  - Used in a meta-type to specify a regex pattern in the value
+- `validator(value)`: validator function
+  - Used in a meta-type to specify a callback function to validate the value
   - Copied to `Class.validator`
     - `this` in the function is the class, not the schema
-##### `detector(value)`: detector function
-  - Used in a pseudo-type to specify a callback function to detect the value type
+- `detector(value)`: detector function
+  - Used in a meta-type to specify a callback function to detect the value type
   - Copied to `Class.detector`
     - `this` in the function is the class, not the schema
 
 ### Schema Types
 
 #### Primitive Types
-##### `"string"`: string type
-##### `"number"`: number type
-##### `"integer"`: integer type
-##### `"boolean"`: boolean type
-##### `"null"`: null value
-##### `"object"`: object type
+- `"string"`: string type
+- `"number"`: number type
+- `"integer"`: integer type
+- `"boolean"`: boolean type
+- `"null"`: null value
+- `"object"`: object type
   - Usage is strongly discouraged as it just copies the reference to the value without validation
 
 #### Special Types
-##### `"undefined"`: optional property
-##### `"-"`: hidden property
+- `"undefined"`: optional property
+- `"-"`: hidden property
   - Hidden properties are defined as `enumerable: false` and do not appear in `JSON.stringify()`
-##### `RegExp` literal object
+- `RegExp` literal object
   - Sepecify a regex pattern for a string property in `regex` special property
 
 #### Class Types
-##### `AnyClassName`: class with schema
+- `AnyClassName`: class with schema
   - Extends the base `JSONClass` (or a customized base class)
 
-#### Pseudo-Types
-##### `AnyClassName`: pseudo-type name
+#### Meta-Types
+- `AnyClassName`: meta-type name
   - Extends the base `JSONClass` (or a customized base class)
   - Has one of the following special properties in schema
     - `"regex"`: regex pattern validation
@@ -426,15 +383,15 @@ if (jsonPath.errors.length > 0) {
     - `detector(value)`: detector callback
 
 #### Type Operators
-##### `|`: or operator
+- `|`: or operator
   - Joins multiple types to check over the types in the joined order
-##### `[]`: array operator
+- `[]`: array operator
   - Used as a postfix
   - Specifies an `Array` value
 
 #### Example Types
 
-##### Primitive Types
+- Primitive Types
 ```js
 class TypeWithPrimitives extends JSONClass {
   static schema = {
@@ -450,7 +407,7 @@ class TypeWithPrimitives extends JSONClass {
 TypeWithPrimitives.register();
 ```
 
-##### Class Object Types
+- Class Object Types
 ```js
 class TypeName extends JSONClass {
   static schema = { ... };
@@ -469,7 +426,7 @@ class TypeWithObjects extends JSONClass {
 TypeWithObjects.register();
 ```
 
-##### Pseudo-Types
+- Meta-Types
 ```js
 class RegexFormat extends JSONClass {
   static schema = {
@@ -498,7 +455,7 @@ class ConstrainedValueObject extends JSONClass {
 ConstrainedValueObject.register();
 ```
 
-##### Variable Type Detector
+- Variable Type Detector
 ```js
 // base class
 class BaseClass extends JSONClass {
@@ -530,7 +487,7 @@ class TypeB extends BaseClass {
     string: "string"
   };
 }
-// detector pseudo-type
+// detector meta-type
 class DerivedClassDetector extends JSONClass {
   static schema = {
     // any properties of any values can be used to distinguish types
@@ -552,7 +509,7 @@ obj.variable_type instanceof TypeA === true;
 obj.variable_type.type === "A";
 ```
 
-##### Hidden Properties
+- Hidden Properties
 ```js
 class TypeWithHiddenProperties extends JSONClass {
   static schema = {

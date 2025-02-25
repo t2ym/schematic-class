@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 ### Changed
+- [doc] Issue #16 Refine API documentation
 ### Removed
 ### Fixed
 
