@@ -3,9 +3,12 @@
 ## [Unreleased]
 ### Added
 ### Changed
-- [doc] Issue #16 Refine API documentation
 ### Removed
 ### Fixed
+
+## [0.1.1] - 2025-02-25
+### Changed
+- [doc] Issue #16 Refine API documentation
 
 ## [0.1.0] - 2025-02-25
 ### Added
