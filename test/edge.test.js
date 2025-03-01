@@ -312,6 +312,25 @@ const test = async ({ JSONClass, JSONClassError, JSONClassFactory, Suite, Common
       }
     }
 
+    suite.test = (base) => class MethodPropertyObject extends base {
+      get description() { return "MethodPropertyObject"; }
+      async operation() {
+        this.MethodPropertyObject = (class MethodPropertyObject extends this.JSONClassScope {
+            static schema = {
+              method: "*", // dangerous
+            };
+            //method() { return "Original Method"; }
+          }).register();
+        //console.log(`${this.description}: conflictingKeys = `, this.StrictObject.conflictingKeys);
+      }
+      async checkpoint() {
+        //chai.assert.throws(() => this.result = new this.MethodPropertyObject({ method() { return "Hello, Method"; } }), JSONClassError, "type mismatch");
+        this.result = new this.MethodPropertyObject({ method() { return "Hello, Method"; } });
+        chai.assert.equal(this.result.method(), "Hello, Method", `Dangerous assignment of function property`);
+        //console.log(this.result);
+      }
+    }
+
     suite.test = {
       '': [
       ],
@@ -329,7 +348,8 @@ const test = async ({ JSONClass, JSONClassError, JSONClassFactory, Suite, Common
             FormattedKeyObjectPrototypeIntrusion: 'FormattedKeyPrototypeIntrusionTest;FormattedKey Prototype Intrusion Test',
             FormattedKeyObjectPrototypeIntrusionNoThrow: 'FormattedKeyPrototypeIntrusionNoThrowTest;No Throw FormattedKey Prototype Intrusion Test',
           },
-          DefineConflictingKeySchema: 'ConflictingKeySchemaTest;Conflicting Key Schema Test'
+          DefineConflictingKeySchema: 'ConflictingKeySchemaTest;Conflicting Key Schema Test',
+          MethodPropertyObject: 'MethodPropertyObjectTest;Method Property Object Test',
         },
       },
     };
