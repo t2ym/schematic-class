@@ -6,6 +6,10 @@
 ### Removed
 ### Fixed
 
+## [0.1.3] - 2025-03-01
+### Fixed
+- [vulnerability] Issue #18 Additional fix for conflicting key error
+
 ## [0.1.2] - 2025-03-01
 ### Fixed
 - [vulnerability] Issue #18 Add conflicting key error
