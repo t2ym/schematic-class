@@ -5,6 +5,7 @@
 ### Changed
 ### Removed
 ### Fixed
+- [vulnerability] Issue #18 Add conflicting key error
 
 ## [0.1.1] - 2025-02-25
 ### Changed

@@ -5,7 +5,7 @@ Copyright (c) 2025, Tetsuya Mori <t2y3141592@gmail.com>. All rights reserved.
 const chai = require('chai');
 
 const scopes = [ // implemented in test/{scope}.test.js
-  'demo',
+  'demo', 'edge',
 ];
 
 async function loadTarget(mode) {

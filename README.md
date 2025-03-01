@@ -54,12 +54,12 @@ catch (e) {
     - [`JSONClassFactory()` function](#jsonclassfactory-function)
     - [`JSONClass` class](#jsonclass-class)
       - [`static initClass(preservePropertyOrder)`](#static-initclasspreservepropertyorder)
-      - [`static register(schema = this.schema, preservePropertyOrder = undefined)`](#static-registerschema--thisschema-preservepropertyorder--undefined)
+      - [`static register(schema = this.schema, preservePropertyOrder = undefined, conflictingKeys = keysHash(this.prototype))`](#static-registerschema--thisschema-preservepropertyorder--undefined-conflictingkeys--keyshashthisprototype)
       - [\[Internal\] `static create(types, value, jsonPath)`](#internal-static-createtypes-value-jsonpath)
       - [\[Internal\] `static onError(errorParameters)`](#internal-static-onerrorerrorparameters)
       - [`constructor(initProperties = null, jsonPath = [])`](#constructorinitproperties--null-jsonpath--)
       - [`validate(jsonPath = [])`](#validatejsonpath--)
-      - [\[Internal\] `* keys(initProperties)`](#internal--keysinitproperties)
+      - [\[Internal\] `* keys(initProperties, jsonPath)`](#internal--keysinitproperties-jsonpath)
       - [\[Internal\] `iterateProperties(initProperties, jsonPath)`](#internal-iteratepropertiesinitproperties-jsonpath)
     - [Schema Properties](#schema-properties)
       - [Enumerable Properties](#enumerable-properties)
@@ -174,13 +174,37 @@ const JSONClass = JSONClassFactory(false);
 - Return Value
   - `this` `JSONClass` object
 
-#### `static register(schema = this.schema, preservePropertyOrder = undefined)`
+#### `static register(schema = this.schema, preservePropertyOrder = undefined, conflictingKeys = keysHash(this.prototype))`
 
 - Register the schema for the class and customize the `preservePropertyOrder`
 
 - Parameters
-  - `schema = this.schema`: `object`: specify the schema for the class; defaults to `this.schema`
+  - `schema = this.schema`: `null-prototype object`: specify the schema for the class; defaults to `this.schema`
   - `preservePropertyOrder`: `boolean`: customize `preservePropertyOrder` if necessary
+  - `conflictingKeys = keysHash(this.prototype)` : `null-prototype object`: specify a hash object for conflicting key names with `true` values
+    - The default value `keysHash(this.prototype)` contains properties with defined string key names in `Class.prototype` and its prototypes
+      - Typical value: 
+```js
+{
+  constructor: true,
+  validate: true,
+  keys: true,
+  iterateProperties: true,
+  __defineGetter__: true,
+  __defineSetter__: true,
+  hasOwnProperty: true,
+  __lookupGetter__: true,
+  __lookupSetter__: true,
+  isPrototypeOf: true,
+  propertyIsEnumerable: true,
+  toString: true,
+  valueOf: true,
+  ['__proto__']: true,
+  toLocaleString: true
+}
+```
+- Initialized Class Properties
+  - `static conflictingKeys`: `null-prototype object`: handed from the parameter
 
 - Example
 ```js
@@ -241,6 +265,7 @@ MyGetterClass.register();
         - "hidden property assignment": unexpected assignment of a hidden property
         - "key mismatch": not the expected key format
         - "invalid key type": unknown key format type
+        - "conflicting key": conflicting key name such as `"__proto__"`
 
 #### `constructor(initProperties = null, jsonPath = [])`
 
@@ -314,7 +339,7 @@ if (jsonPath.errors.length > 0) {
 }
 ```
 
-#### [Internal] `* keys(initProperties)`
+#### [Internal] `* keys(initProperties, jsonPath)`
 
 - Internal method to generate property keys for `interateProperties()`
   - The order of generated keys is controlled by `preservePropertyOrder` class property
@@ -322,6 +347,7 @@ if (jsonPath.errors.length > 0) {
 
 - Parameters
   - `initProperties`: `object`: the target value object to validate
+  - `jsonPath = []`: `Array`: the same as that of the `constructor` parameter
 
 #### [Internal] `iterateProperties(initProperties, jsonPath)`
 
