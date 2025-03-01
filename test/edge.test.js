@@ -157,6 +157,9 @@ const test = async ({ JSONClass, JSONClassError, JSONClassFactory, Suite, Common
       async checkpoint(parameters) {
         const jsonPath = Object.assign([], { errors: [], recoveryMethod: "value" });
         this.result = new this.LooseObject(this.object, jsonPath);
+        //console.log(this.result);
+        chai.assert.equal(this.result.constructor, this.LooseObject, `constructor is consistent`);
+        chai.assert.equal(this.result.__proto__, this.LooseObject.prototype, `__proto__ is consistent`);
         const error = jsonPath.errors[0]
         chai.assert.equal(error.message, 'conflicting key', `conflicting key error`);
         chai.assert.equal(error.key, parameters.key, `error.key is ${parameters.key}`);
@@ -213,6 +216,9 @@ const test = async ({ JSONClass, JSONClassError, JSONClassFactory, Suite, Common
       async checkpoint(parameters) {
         const jsonPath = Object.assign([], { errors: [], recoveryMethod: "value" });
         this.result = new this.StrictObject(this.object, jsonPath);
+        //console.log(this.result);
+        chai.assert.equal(this.result.constructor, this.StrictObject, `constructor is consistent`);
+        chai.assert.equal(this.result.__proto__, this.StrictObject.prototype, `__proto__ is consistent`);
         const error = jsonPath.errors[0]
         chai.assert.equal(error.message, 'conflicting key', `conflicting key error`);
         chai.assert.equal(error.key, parameters.key, `error.key is ${parameters.key}`);
@@ -270,6 +276,9 @@ const test = async ({ JSONClass, JSONClassError, JSONClassFactory, Suite, Common
       async checkpoint(parameters) {
         const jsonPath = Object.assign([], { errors: [], recoveryMethod: "value" });
         this.result = new this.FormattedKeyObject(this.object, jsonPath);
+        //console.log(this.result);
+        chai.assert.equal(this.result.constructor, this.FormattedKeyObject, `constructor is consistent`);
+        chai.assert.equal(this.result.__proto__, this.FormattedKeyObject.prototype, `__proto__ is consistent`);
         const error = jsonPath.errors[0]
         chai.assert.equal(error.message, 'conflicting key', `conflicting key error`);
         chai.assert.equal(error.key, parameters.key, `error.key is ${parameters.key}`);

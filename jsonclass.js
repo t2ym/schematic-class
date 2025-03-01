@@ -360,7 +360,9 @@ const JSONClassFactory = (
             const originalValue = initProperties[key];
             let value = originalValue;
             if (conflictingKeys[key]) {
-              value = this.constructor.onError({ jsonPath, type: property, key, value, message: "conflicting key" });
+              this.constructor.onError({ jsonPath, type: property, key, value, message: "conflicting key" });
+              jsonPath && jsonPath.pop();
+              continue;
             }
             else if (!keyType.validator(key)) {
               value = this.constructor.onError({ jsonPath, type: property, key, value, message: "key mismatch" });
