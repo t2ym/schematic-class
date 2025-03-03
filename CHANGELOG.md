@@ -3,9 +3,12 @@
 ## [Unreleased]
 ### Added
 ### Changed
-- [performance] Issue #20 Performance optimization on for loops
 ### Removed
 ### Fixed
+
+## [0.1.4] - 2025-03-03
+### Changed
+- [performance] Issue #20 Performance optimization on for loops
 
 ## [0.1.3] - 2025-03-01
 ### Fixed
