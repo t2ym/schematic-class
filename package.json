@@ -1,7 +1,7 @@
 {
   "name": "schematic-class",
   "version": "0.1.3",
-  "description": "Integrated JSON schema for JavaScript classes",
+  "description": "JSONClass: Integrated JSON schema for JavaScript classes",
   "main": "jsonclass.js",
   "module": "esm/jsonclass.js",
   "scripts": {
