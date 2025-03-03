@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 ### Changed
+- [performance] Issue #20 Performance optimization on for loops
 ### Removed
 ### Fixed
 

@@ -59,7 +59,7 @@ catch (e) {
       - [\[Internal\] `static onError(errorParameters)`](#internal-static-onerrorerrorparameters)
       - [`constructor(initProperties = null, jsonPath = [])`](#constructorinitproperties--null-jsonpath--)
       - [`validate(jsonPath = [])`](#validatejsonpath--)
-      - [\[Internal\] `* keys(initProperties, jsonPath)`](#internal--keysinitproperties-jsonpath)
+      - [\[Internal\] `keys(initProperties, jsonPath)`](#internal-keysinitproperties-jsonpath)
       - [\[Internal\] `iterateProperties(initProperties, jsonPath)`](#internal-iteratepropertiesinitproperties-jsonpath)
     - [Schema Properties](#schema-properties)
       - [Enumerable Properties](#enumerable-properties)
@@ -339,7 +339,7 @@ if (jsonPath.errors.length > 0) {
 }
 ```
 
-#### [Internal] `* keys(initProperties, jsonPath)`
+#### [Internal] `keys(initProperties, jsonPath)`
 
 - Internal method to generate property keys for `interateProperties()`
   - The order of generated keys is controlled by `preservePropertyOrder` class property
@@ -347,7 +347,11 @@ if (jsonPath.errors.length > 0) {
 
 - Parameters
   - `initProperties`: `object`: the target value object to validate
+  - `initPropertiesKeys`: `Array`: the list of `initProperties` keys
   - `jsonPath = []`: `Array`: the same as that of the `constructor` parameter
+
+- Return Value
+  - `Array`: list of keys in `string`
 
 #### [Internal] `iterateProperties(initProperties, jsonPath)`
 

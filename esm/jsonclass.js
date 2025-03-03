@@ -263,38 +263,40 @@ const JSONClassFactory = (
     // not thrown
     return !jsonPath.errors || (jsonPath.errors && jsonPath.errors.length == 0)
   }
-  * [keysGeneratorMethodName](initProperties, jsonPath) {
+  [keysGeneratorMethodName](initProperties, initPropertiesKeys, jsonPath) {
     const schema = this.constructor.schema;
+    const schemaKeys = this.constructor.schemaKeys;
     const conflictingKeys = this.constructor.conflictingKeys;
+    const keys = [];
     if (initProperties) {
       if (this.constructor.preservePropertyOrder) {
         const processedKeys = Object.create(null);
-        for (let key of this.constructor.schemaKeys) {
+        for (const key of schemaKeys) {
           if (schema[key] === "-") {
             processedKeys[key] = true;
-            yield key; // hidden key
+            keys.push(key); // hidden key
           }
         }
-        for (let key in initProperties) {
+        for (const key of initPropertiesKeys) {
           processedKeys[key] = true;
           if (conflictingKeys[key]) {
             this.constructor.onError({ jsonPath, type: "undefined", key, value: initProperties[key], message: "conflicting key" });
             continue;
           }
-          yield key;
+          keys.push(key);
         }  
-        for (let key of this.constructor.schemaKeys) {
+        for (const key of schemaKeys) {
           if (processedKeys[key]) {
             continue;
           }
-          yield key;
+          keys.push(key);
         }
       }
       else {
-        for (let key of this.constructor.schemaKeys) {
-          yield key;
+        for (const key of schemaKeys) {
+          keys.push(key);
         }
-        for (let key in initProperties) {
+        for (const key of initPropertiesKeys) {
           if (schema[key]) {
             continue;
           }
@@ -302,24 +304,27 @@ const JSONClassFactory = (
             this.constructor.onError({ jsonPath, type: "undefined", key, value: initProperties[key], message: "conflicting key" });
             continue;
           }
-          yield key; // additional property
+          keys.push(key); // additional property
         }
       }
     }
     else { // if initProperties object is null, only hidden properties are defined
-      for (let key of this.constructor.schemaKeys) {
+      for (const key of schemaKeys) {
         if (schema[key] === "-") {
-          yield key; // hidden key
+          keys.push(key); // hidden key
         }
       }
     }
+    return keys;
   }
   iterateProperties(initProperties, jsonPath) {
     const schema = this.constructor.schema;
     const inventory = this.constructor.inventory;
     const parsedTypes = this.constructor.parsedTypes;
     const loading = !(jsonPath && jsonPath.validate);
-    for (const property of this[keysGeneratorMethodName](initProperties, jsonPath)) {
+    const initPropertiesKeys = initProperties ? Object.keys(initProperties) : []; // avoiding redundant calculation of Object.keys()
+    const keys = this[keysGeneratorMethodName](initProperties, initPropertiesKeys, jsonPath);
+    for (const property of keys) {
       jsonPath && jsonPath.push(property);
       let currentSchema = schema[property] || schema["+"] || "undefined";
       if (currentSchema === "-") {
@@ -355,7 +360,7 @@ const JSONClassFactory = (
         if (JSONClass.isPrototypeOf(keyType)) {
           jsonPath && jsonPath.pop();
           const conflictingKeys = this.constructor.conflictingKeys;
-          for (let key in initProperties) {
+          for (const key of initPropertiesKeys) {
             jsonPath && jsonPath.push(key);
             const originalValue = initProperties[key];
             let value = originalValue;
