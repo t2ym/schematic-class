@@ -2,10 +2,13 @@
 
 ## [Unreleased]
 ### Added
-- [type] Issue #23 Add ( and ) type operators
 ### Changed
 ### Removed
 ### Fixed
+
+## [0.1.5] - 2025-03-05
+### Added
+- [type] Issue #23 Add ( and ) type operators
 
 ## [0.1.4] - 2025-03-03
 ### Changed
