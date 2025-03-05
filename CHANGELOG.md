@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- [type] Issue #23 Add ( and ) type operators
 ### Changed
 ### Removed
 ### Fixed

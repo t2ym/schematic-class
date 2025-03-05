@@ -164,9 +164,6 @@ const JSONClassFactory = (
         break;
       default:
         if (Array.isArray(type)) { // property with an Array value
-          if (!Array.isArray(value)) {
-            value = this.onError({ jsonPath, type: "Array", value, message: "type mismatch" });
-          }
           if (Array.isArray(value)) { // value is an Array
             const length = value.length;
             const newValue = [];
@@ -180,7 +177,7 @@ const JSONClassFactory = (
             return loading ? newValue : value;
           }
           else {
-            return value;
+            break;
           }
         }
         else {
@@ -353,7 +350,24 @@ const JSONClassFactory = (
             ? [ currentSchema ]
             : currentSchema.endsWith("[]")
               ? [ currentSchema.substring(0, currentSchema.length - 2).split('|') ]
-              : currentSchema.split("|")
+              : Array.prototype.map.call(new String(currentSchema), (chr, idx, str) => {
+                  switch (chr) {
+                  case '(':
+                    str.in = true;
+                    return '';
+                  case ')':
+                    str.in = false;
+                    return '';
+                  case '|':
+                    return str.in ? ',' : '|';
+                  default:
+                    return chr;
+                  }
+                }).join('').split('|')
+                  .map((v) => v.endsWith("[]")
+                                ? v.substring(0, v.length - 2).split(',')
+                                : v
+                  )
         );
       if (Object.hasOwn(inventory, property)) {
         const keyType = inventory[property];

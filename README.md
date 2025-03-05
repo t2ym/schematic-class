@@ -421,6 +421,15 @@ if (jsonPath.errors.length > 0) {
 - `[]`: array operator
   - Used as a postfix
   - Specifies an `Array` value
+- `(` ... `)`: parentheses operator
+  - `|` operator between `(` and `)` has higher precedence
+    - The right parenthesis is preceded by `[]`
+      - The effect of `[]` operator is limited within the surrounding parentheses
+      - The resolved type can be an array or a non-array (TypedObject or a primitive value)
+    - Only 1 depth of parentheses is supported
+  - Examples:
+    - `(string|integer[])|Type`
+    - `TypeDetector|null|(string|TypeValidator[])`
 
 #### Example Types
 
@@ -573,6 +582,40 @@ obj2.hidden_property === "hidden value";
 JSON.stringify(obj2) === `{"string_property":"str"}`;
 ```
 
+- Recursive Object with Array
+```js
+(class ConditionOrState extends JSONClass {}).register({
+  regex: /^[a-zA-Z0-9_]+(:[a-zA-Z0-9_ ]+)?$/
+});
+
+(class TargetState extends JSONClass {}).register({
+  regex: /^[a-zA-Z0-9_]+$/
+});
+
+class StateTransition extends JSONClass {
+  static schema = {
+    ConditionOrState: "TargetState[]|StateTransition"
+  };
+}
+StateTransition.register();
+
+new StateTransition({
+  "prop1:OK": {
+    "prop2:Rejected": {
+      "StateA": [ "StateB", "StateC" ],
+      "StateB": [ "StateC" ],
+      "default": [ "StateA" ],
+    },
+    "prop2:Accepted": {
+      "StateA": [ "StateC" ],
+      "default": [ "StateA" ]
+    },
+    "default": [ "StateY" ]
+  },
+  "default": [ "StateX" ]
+});
+```
+
 ## Test
 
 ```sh
@@ -580,7 +623,7 @@ git clone https://github.com/t2ym/schematic-class
 cd schematic-class
 npm i
 npm test
-chrome test/coverage/index.html
+google-chrome test/coverage/index.html
 ```
 
 ## License

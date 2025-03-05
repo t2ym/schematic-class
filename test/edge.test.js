@@ -331,6 +331,183 @@ const test = async ({ JSONClass, JSONClassError, JSONClassFactory, Suite, Common
       }
     }
 
+    suite.test = (base) => class RecursiveObject extends base {
+      get description() { return "RecursiveObject ConditionsDetector|(string|integer[])"; }
+      async operation() {
+        this.ConditionsLabel = (class ConditionsLabel extends this.JSONClassScope {}).register({
+          regex: /^[a-zA-Z0-9_]+(:[a-zA-Z0-9_ ]+)?$/
+        });
+      
+        this.ConditionsDetector = (class ConditionsDetector extends this.JSONClassScope {}).register({
+          detector(value) {
+            return value && typeof value === "object" && !Array.isArray(value)
+              ? "Conditions"
+              : false;
+          }
+        });
+      
+        this.Conditions = (class Conditions extends this.JSONClassScope {
+          static schema = {
+            ConditionsLabel: "ConditionsDetector|(string|integer[])"
+          };
+        }).register();
+
+        this.ContainerObject = (class ContainerObject extends this.JSONClassScope {
+          static schema = {
+            container: "Conditions"
+          };
+        }).register();
+
+        this.json = {
+          "container": {
+            "browser:Chrome": {
+              "fullVersionBrowser:Google Chrome": {
+                "default": [
+                  "pending"
+                ],
+                "pending": [
+                  "validated",
+                  "invalidated"
+                ],
+                "validated": [
+                  "invalidated"
+                ],
+                "invalidated": [
+                  "validated"
+                ]
+              },
+              "fullVersionBrowser:Chromium": [
+                "invalidated;Chromium is invalid",
+                3
+              ],
+              "default": [
+                "invalidated;unrecognized Chromium-based browser is invalid",
+                4
+              ]
+            },
+            "browser:Edg": [
+              "invalidated;Microsoft Edge support is in progress",
+              5
+            ],
+            "default": [
+              "invalidated;unrecognized browser is invalid"
+            ]
+          }
+        };
+        this.result = new this.ContainerObject(this.json);
+      }
+      async checkpoint() {
+        [
+          [ this.result.container, "result.container" ],
+          [ this.result.container["browser:Chrome"], "result.container.browser:Chrome" ],
+          [ this.result.container["browser:Chrome"]["fullVersionBrowser:Google Chrome"], "result.container.browser:Chrome.fullVersionBrowser:Google Chrome" ],
+        ].forEach(([ v, p ]) => {
+          chai.assert.isOk(v instanceof this.Conditions, `${p} instanceof Conditions`);
+        });
+
+        [
+          [ this.result.container["browser:Chrome"]["fullVersionBrowser:Chromium"], "result.container.browser:Chrome.fullVersionBrowser:Chromium" ],
+          [ this.result.container["browser:Chrome"]["fullVersionBrowser:Google Chrome"].default, "result.container.browser:Chrome.fullVersionBrowser:Google Chrome.default" ],
+          [ this.result.container["browser:Edg"], "result.container.browser:Edg" ],
+          [ this.result.container["default"], "result.container.default" ],
+        ].forEach(([ v, p ]) => {
+          chai.assert.isOk(Array.isArray(v), `${p} is Array`);
+          v.forEach((item, index) => {
+            chai.assert.isOk(typeof item === "string" || Number.isInteger(item), `[${index}] ${item} is string or integer`);
+          });
+        });
+      }
+    }
+
+    suite.test = (base) => class RecursiveObject2 extends base {
+      get description() { return "RecursiveObject2 (ConditionsValue|integer[])|null|Conditions"; }
+      async operation() {
+        this.ConditionsLabel = (class ConditionsLabel extends this.JSONClassScope {}).register({
+          regex: /^[a-zA-Z0-9_]+(:[a-zA-Z0-9_ ]+)?$/
+        });
+      
+        this.ConditionsValue = (class ConditionsValue extends this.JSONClassScope {}).register({
+          validator(value) {
+            return typeof value === "string" && value.match(/^[a-z](;.*)?/);
+          }
+        });
+      
+        this.Conditions = (class Conditions extends this.JSONClassScope {
+          static schema = {
+            ConditionsLabel: "(ConditionsValue|integer[])|null|Conditions"
+          };
+        }).register();
+
+        this.ContainerObject = (class ContainerObject extends this.JSONClassScope {
+          static schema = {
+            container: "Conditions"
+          };
+        }).register();
+
+        this.json = {
+          "container": {
+            "browser:Chrome": {
+              "fullVersionBrowser:Google Chrome": {
+                "default": [
+                  "pending"
+                ],
+                "pending": [
+                  "validated",
+                  "invalidated"
+                ],
+                "validated": [
+                  "invalidated"
+                ],
+                "invalidated": [
+                  "validated"
+                ]
+              },
+              "fullVersionBrowser:Chromium": [
+                "invalidated;Chromium is invalid",
+                3
+              ],
+              "default": [
+                "invalidated;unrecognized Chromium-based browser is invalid",
+                4
+              ]
+            },
+            "browser:Edg": [
+              "invalidated;Microsoft Edge support is in progress",
+              5
+            ],
+            "default": [
+              "invalidated;unrecognized browser is invalid"
+            ]
+          }
+        };
+        this.jsonPath = Object.assign([], { errors: [], recoveryMethod: "value" });
+        this.result = new this.ContainerObject(this.json, this.jsonPath);
+        //console.log(this.jsonPath);
+        //console.log(JSON.stringify(this.ContainerObject.parsedTypes, null, 2));
+      }
+      async checkpoint() {
+        [
+          [ this.result.container, "result.container" ],
+          [ this.result.container["browser:Chrome"], "result.container.browser:Chrome" ],
+          [ this.result.container["browser:Chrome"]["fullVersionBrowser:Google Chrome"], "result.container.browser:Chrome.fullVersionBrowser:Google Chrome" ],
+        ].forEach(([ v, p ]) => {
+          chai.assert.isOk(v instanceof this.Conditions, `${p} instanceof Conditions`);
+        });
+
+        [
+          [ this.result.container["browser:Chrome"]["fullVersionBrowser:Chromium"], "result.container.browser:Chrome.fullVersionBrowser:Chromium" ],
+          [ this.result.container["browser:Chrome"]["fullVersionBrowser:Google Chrome"].default, "result.container.browser:Chrome.fullVersionBrowser:Google Chrome.default" ],
+          [ this.result.container["browser:Edg"], "result.container.browser:Edg" ],
+          [ this.result.container["default"], "result.container.default" ],
+        ].forEach(([ v, p ]) => {
+          chai.assert.isOk(Array.isArray(v), `${p} is Array`);
+          v.forEach((item, index) => {
+            chai.assert.isOk(typeof item === "string" || Number.isInteger(item), `[${index}] ${item} is string or integer`);
+          });
+        });
+      }
+    }
+
     suite.test = {
       '': [
       ],
@@ -350,6 +527,8 @@ const test = async ({ JSONClass, JSONClassError, JSONClassFactory, Suite, Common
           },
           DefineConflictingKeySchema: 'ConflictingKeySchemaTest;Conflicting Key Schema Test',
           MethodPropertyObject: 'MethodPropertyObjectTest;Method Property Object Test',
+          RecursiveObject: 'RecursiveObjectTest;Recursive Object Test ConditionsDetector|(string|integer[])',
+          RecursiveObject2: 'RecursiveObjectTest2;Recursive Object Test 2 (ConditionsValue|integer[])|null|Conditions',
         },
       },
     };
