@@ -430,6 +430,15 @@ if (jsonPath.errors.length > 0) {
   - Examples:
     - `(string|integer[])|Type`
     - `TypeDetector|null|(string|TypeValidator[])`
+- Syntax
+  - No extra spaces are permitted
+  - Only one array `[]` operator is permitted
+    - `|` operator has higher precedence than `[]` operator unless surrounded by `(` `)`
+      - If the type ends with `[]`, that means an array of all the preceding types joined by `|`
+      - `type1|...|typeN[]` - an array of items whose types are `type1`, ..., or `typeN`
+  - Parentheses `(``)` are always used for an array `[]`
+    - `(type1|...|typeN[])`
+    - `(type[])`
 
 #### Example Types
 
